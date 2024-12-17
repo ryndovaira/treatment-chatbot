@@ -53,51 +53,109 @@
 
 ### Phase 3: RAG Pipeline Development
 
+The **RAG (Retrieval-Augmented Generation)** pipeline combines dynamic information retrieval with model generation to
+ensure responses are **accurate, up-to-date, and contextually grounded**.
+
 1. **Data Processing and Embedding**:
     - Preprocess text data (tokenization, cleaning).
     - Convert documents into embeddings using:
-        - **Sentence-Transformers** (efficient Hugging Face models).
-        - Use quantization (`bitsandbytes`) for memory-efficient processing.
+        - **Sentence-Transformers** (efficient Hugging Face models for embedding generation).
+        - Use quantization (`bitsandbytes`) for memory-efficient processing on large datasets.
+
 2. **Vector Database**:
-    - Prototype with **FAISS** (local).
-    - For cloud deployment, use **Pinecone** for scalable storage.
+    - Store and retrieve document embeddings for fast and accurate similarity search.
+    - **Local Deployment**: Use **FAISS** for prototyping.
+    - **Cloud Deployment**: Use **Pinecone** for scalable vector storage.
+
 3. **Retriever**:
-    - Implement a retriever to fetch relevant embeddings.
+    - Implement a retriever to query the vector database and fetch the most relevant document embeddings.
+    - These retrieved documents serve as **context** for the generator.
+
 4. **Generator**:
-    - Integrate the generator models:
-        - **LLaMA 3 8B** locally for public data.
-        - **ChatGPT-3.5 API** for simulated private data.
+    - Integrate generator models to generate grounded responses using the retrieved context:
+        - **LLaMA**: Handles **simulated private data** for HIPAA-like compliance.
+        - **ChatGPT API**: Handles **public data**, including clinical guidelines and research articles.
+
 5. **LangChain Integration**:
-    - Use **LangChain** to orchestrate the RAG workflow: Retriever → Generator.
+    - Use **LangChain** to seamlessly orchestrate the RAG workflow:
+        - **Retriever**: Fetches relevant documents.
+        - **Generator**: Produces answers conditioned on the retrieved documents.
+    - Pass both the **retrieved context** and the **user query** to the generator for improved response accuracy.
 
 ---
 
 ### Phase 4: Fine-Tuning Models
 
-- **LLaMA Fine-Tuning (Private Data)**:
-    - **Environment**:
-        - Local fine-tuning using **LoRA/QLoRA** for efficiency.
-        - Tools: Hugging Face Transformers, `bitsandbytes`.
-    - **Cloud Backup**:
-        - Explore fine-tuning and serving on **Google Vertex AI**, AWS SageMaker, or Azure ML.
-    - **Steps**:
-        - Load the base LLaMA model (configurable version) for fine-tuning.
-        - Train on **mock private data** for personalization.
-        - Validate performance with `lm-evaluation-harness`.
+Fine-tuning enhances the performance of generator models by adapting them to **domain-specific tasks** and **datasets**.
+This ensures the models understand clinical terminology, patient-specific scenarios, and evidence-based guidelines.
 
-- **OpenAI ChatGPT (Public Data)**:
-    - Fine-tuning is not applicable to proprietary models.
-    - Adjust prompts, temperature, and other settings for better alignment with the task.
-    - Validate outputs to ensure tone and relevance align with expectations.
+- **Why Fine-Tuning and RAG Together?**
+    - **Fine-Tuning** makes the models domain-specific and task-aware.
+    - **RAG** provides dynamically retrieved external context to ensure responses are factually grounded and up-to-date.
+
+---
+
+#### **LLaMA Fine-Tuning (Private Data)**
+
+- **Purpose**: Adapt LLaMA to generate accurate, HIPAA-compliant treatment recommendations based on patient records and
+  lab results.
 - **Environment**:
-    - Local fine-tuning using **LoRA/QLoRA** (for efficiency).
+    - Local fine-tuning using **LoRA/QLoRA** for efficient training.
     - Tools: Hugging Face Transformers, `bitsandbytes`.
 - **Cloud Backup**:
-    - Prepare for fine-tuning on **Google Vertex AI**.
+    - Explore fine-tuning and hosting on **Google Vertex AI**, AWS SageMaker, or Azure ML.
 - **Steps**:
     - Load the base LLaMA model (configurable version) for fine-tuning.
-    - Train on **mock private data** for personalization.
-    - Validate fine-tuning performance with lm-evaluation-harness.
+    - Train on **mock private patient data**, including demographics, lab tests, and treatment histories.
+    - Validate fine-tuning performance using `lm-evaluation-harness` and patient-specific test prompts.
+
+---
+
+#### **OpenAI ChatGPT Fine-Tuning (Public Data)**
+
+- **Purpose**: Fine-tune ChatGPT models (e.g., GPT-3.5) to align responses with **clinical guidelines and medical
+  research**.
+- **Dataset Preparation**:
+    - Prepare a fine-tuning dataset in **JSONL format** with prompt-completion pairs:
+      ```json
+      {"prompt": "What is the recommended HbA1c target for Type 2 diabetes?", 
+       "completion": "For most adults with Type 2 diabetes, the HbA1c target is below 7.0%, as per ADA guidelines."}
+      ```
+    - Ensure data is high-quality, relevant, and adheres to OpenAI’s token and size guidelines.
+
+- **Steps**:
+    - Upload the fine-tuning dataset to OpenAI using the CLI or API.
+    - Initiate the fine-tuning job and monitor progress through OpenAI tools.
+    - Validate outputs post fine-tuning to ensure:
+        - **Clinical alignment**: Responses match ADA guidelines and research findings.
+        - **Tone and relevance**: Answers are concise, professional, and evidence-based.
+
+---
+
+### **Combining Fine-Tuning and RAG**
+
+The system will use **both fine-tuning and RAG** to achieve optimal results:
+
+1. **Fine-Tuning**:
+    - LLaMA becomes task-specific for personalized, patient-level recommendations.
+    - OpenAI GPT becomes aligned with public medical guidelines.
+
+2. **RAG**:
+    - Dynamically retrieves relevant external documents to provide real-time, factually accurate context.
+    - Retrieved context improves the generator’s output by reducing hallucinations and enhancing accuracy.
+
+3. **Final Workflow**:
+    - **Retrieve**: Use a retriever to fetch relevant medical guidelines or patient histories.
+    - **Augment**: Pass the retrieved context into the generator model as input.
+    - **Generate**: Use fine-tuned LLaMA or GPT models to generate final, grounded treatment recommendations.
+
+Example Workflow:
+
+- **User Input**: "What treatment is best for a 45-year-old male with HbA1c of 8.2%?"
+- **Retriever**: Fetches ADA guidelines recommending metformin.
+- **Generator** (Fine-Tuned LLaMA or ChatGPT):
+    - *"Based on ADA guidelines, metformin is recommended as the first-line treatment for adults with HbA1c above 7.5%,
+      along with lifestyle changes."*
 
 ---
 

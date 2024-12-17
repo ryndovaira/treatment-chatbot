@@ -72,7 +72,7 @@
 
 ---
 
-### Phase 4: Fine-Tuning LLaMA
+### Phase 4: Fine-Tuning Models
 
 - **Environment**:
     - Local fine-tuning using **LoRA/QLoRA** (for efficiency).

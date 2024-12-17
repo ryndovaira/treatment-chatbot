@@ -190,10 +190,3 @@
    vs. type 2 diabetes)?
 3. **Evaluation Metrics**: Should we include any specific metrics for chatbot response quality, like BLEU or ROUGE
    scores?
-
----
-
-## Next Steps
-
-1. Confirm all technologies, steps, and components in the plan.
-2. Start with **Phase 1: Environment Setup** for local development.

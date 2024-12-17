@@ -5,9 +5,9 @@
 - **Public Data**: Clinical guidelines, articles, and mock patient data for lab results, demographics, and symptoms.
 - **Simulated Private Data**: Patient records, lab tests, and individual case studies.
 - **Models**:
-   - **LLaMA 3 8B** (for public data).
-   - **ChatGPT-3.5 API** (for private data).
-- **Deployment**: On-premise (Linux server) and cloud (Google Vertex AI), with adaptability for AWS.
+    - **LLaMA** (configurable for simulated private data).
+    - **ChatGPT API** (configurable for public data).
+- **Deployment**: Configurable deployment on-premise or cloud (e.g., Hetzner, AWS, Google Cloud, Azure).
 - **Development**: Local machine (Windows + WSL Ubuntu) with GPU support.
 
 ---

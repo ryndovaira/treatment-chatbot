@@ -240,11 +240,3 @@ Example Workflow:
 | **Testing**              | Pytest, manual testing                        |
 
 ---
-
-## Questions for Clarification
-
-1. **GPU Details**: What is the model of your GPU to confirm compatibility with CUDA and LoRA/QLoRA performance?
-2. **Mock Data**: Would you like the mock patient data to include any specific demographics or conditions (e.g., type 1
-   vs. type 2 diabetes)?
-3. **Evaluation Metrics**: Should we include any specific metrics for chatbot response quality, like BLEU or ROUGE
-   scores?

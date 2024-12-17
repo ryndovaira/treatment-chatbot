@@ -74,10 +74,9 @@
 - **Cloud Backup**:
    - Prepare for fine-tuning on **Google Vertex AI**.
 - **Steps**:
-   - Load base LLaMA 3 8B model.
-   - Train on **mock private data** for personalization.
-   - Validate fine-tuning performance with lm-evaluation-harness.
     - Load the base LLaMA model (configurable version) for fine-tuning.
+    - Train on **mock private data** for personalization.
+    - Validate fine-tuning performance with lm-evaluation-harness.
 
 ---
 

@@ -66,7 +66,8 @@
 
 ---
 
-### Phase 4: Fine-Tuning LLaMA 3 8B
+### Phase 4: Fine-Tuning LLaMA
+
 - **Environment**:
    - Local fine-tuning using **LoRA/QLoRA** (for efficiency).
    - Tools: Hugging Face Transformers, `bitsandbytes`.
@@ -76,6 +77,7 @@
    - Load base LLaMA 3 8B model.
    - Train on **mock private data** for personalization.
    - Validate fine-tuning performance with lm-evaluation-harness.
+    - Load the base LLaMA model (configurable version) for fine-tuning.
 
 ---
 

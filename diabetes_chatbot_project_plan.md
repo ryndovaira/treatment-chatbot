@@ -74,6 +74,21 @@
 
 ### Phase 4: Fine-Tuning Models
 
+- **LLaMA Fine-Tuning (Private Data)**:
+    - **Environment**:
+        - Local fine-tuning using **LoRA/QLoRA** for efficiency.
+        - Tools: Hugging Face Transformers, `bitsandbytes`.
+    - **Cloud Backup**:
+        - Explore fine-tuning and serving on **Google Vertex AI**, AWS SageMaker, or Azure ML.
+    - **Steps**:
+        - Load the base LLaMA model (configurable version) for fine-tuning.
+        - Train on **mock private data** for personalization.
+        - Validate performance with `lm-evaluation-harness`.
+
+- **OpenAI ChatGPT (Public Data)**:
+    - Fine-tuning is not applicable to proprietary models.
+    - Adjust prompts, temperature, and other settings for better alignment with the task.
+    - Validate outputs to ensure tone and relevance align with expectations.
 - **Environment**:
     - Local fine-tuning using **LoRA/QLoRA** (for efficiency).
     - Tools: Hugging Face Transformers, `bitsandbytes`.

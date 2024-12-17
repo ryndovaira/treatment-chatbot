@@ -1,0 +1,26 @@
+# Core Libraries
+torch
+torchvision
+torchaudio
+transformers
+sentence-transformers
+bitsandbytes
+accelerate
+faiss-cpu
+langchain
+
+# Data Processing
+pandas
+numpy
+
+# API and Frontend
+fastapi
+uvicorn
+streamlit
+
+# Mock Data Generation
+faker
+
+# Testing and Utilities
+pytest
+black

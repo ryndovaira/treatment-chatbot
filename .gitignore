@@ -174,6 +174,8 @@ cython_debug/
 tmp/
 temp/
 
-# Ignore all but PDFs in the raw data directories
-/data/raw/**/*
-!/data/raw/**/**/*.pdf
+# Ignore all PDFs globally
+*.pdf
+
+# Allow PDFs in data/raw/ subdirectories
+!/data/raw/**/*.pdf

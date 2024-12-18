@@ -49,6 +49,23 @@
     - Structured: CSV, JSON.
     - Unstructured: PDFs, markdown files.
 
+#### Mock Data Design
+
+The mock data will include:
+
+- **Edge Cases**: Extreme glucose levels, unusual symptoms, and mixed comorbidities (e.g., hypertension, obesity).
+- **Types of Diabetes**: Type 1, Type 2, and gestational diabetes.
+- **Diverse Demographics**:
+    - Age Groups: Children, adults, and elderly.
+    - Gender: Male and female.
+    - Lifestyle: Sedentary, active, smokers, non-smokers.
+- **Longitudinal Data**:
+    - Simple tracking of lab values over time for selected patients. Example:
+      ```json
+      {"patient_id": 123, "age": 45, "HbA1c_over_time": [8.2, 7.5, 6.8], "treatment": "Metformin"}
+      ```
+- **Exclusions**: Anonymized clinical text records (e.g., doctor-patient conversations) are excluded for simplicity.
+
 ---
 
 ### Phase 3: RAG Pipeline Development
@@ -82,16 +99,35 @@ ensure responses are **accurate, up-to-date, and contextually grounded**.
         - **Generator**: Produces answers conditioned on the retrieved documents.
     - Pass both the **retrieved context** and the **user query** to the generator for improved response accuracy.
 
+#### Explainability Features
+
+The chatbot will include explainability features to enhance trust and usability:
+
+- **Summary of Recommendations**: Clear and concise output for users.
+- **Relevant Guidelines**: Highlight retrieved portions of medical guidelines as evidence.
+- **Top N Similar Patients**: Examples of similar cases and their treatments.
+- **Top N Articles**: Latest research articles for special cases, with links to the source.
+- **Confidence Scores**: Display a confidence level for each recommendation (e.g., "85% confident").
+
 ---
 
 ### Phase 4: Fine-Tuning Models
 
-Fine-tuning enhances the performance of generator models by adapting them to **domain-specific tasks** and **datasets**.
-This ensures the models understand clinical terminology, patient-specific scenarios, and evidence-based guidelines.
+#### **Fine-Tuning and RAG: Why Use Both?**
 
-- **Why Fine-Tuning and RAG Together?**
-    - **Fine-Tuning** makes the models domain-specific and task-aware.
-    - **RAG** provides dynamically retrieved external context to ensure responses are factually grounded and up-to-date.
+Fine-tuning and RAG work together to ensure the chatbot produces accurate, domain-specific, and up-to-date responses:
+
+- **Fine-Tuning**:
+    - Adapts the generator models to domain-specific tasks (e.g., understanding diabetes guidelines, terminology, and
+      patient scenarios).
+    - Makes the models task-aware and more effective for structured medical data.
+
+- **RAG**:
+    - Dynamically retrieves **external, up-to-date context** (e.g., guidelines, similar cases, research articles).
+    - Grounds the model’s outputs in reliable sources, reducing hallucinations and improving factual accuracy.
+
+By combining **static learning** (fine-tuning) with **dynamic retrieval** (RAG), the chatbot benefits from both
+pre-trained domain knowledge and live, contextually relevant information.
 
 ---
 
@@ -149,13 +185,18 @@ The system will use **both fine-tuning and RAG** to achieve optimal results:
     - **Augment**: Pass the retrieved context into the generator model as input.
     - **Generate**: Use fine-tuned LLaMA or GPT models to generate final, grounded treatment recommendations.
 
-Example Workflow:
+#### Example Workflow
 
 - **User Input**: "What treatment is best for a 45-year-old male with HbA1c of 8.2%?"
-- **Retriever**: Fetches ADA guidelines recommending metformin.
+- **Retriever**: Fetches relevant ADA guidelines recommending metformin as the first-line treatment.
 - **Generator** (Fine-Tuned LLaMA or ChatGPT):
-    - *"Based on ADA guidelines, metformin is recommended as the first-line treatment for adults with HbA1c above 7.5%,
-      along with lifestyle changes."*
+  ```text
+  Recommendation: Metformin is the first-line treatment for Type 2 diabetes with HbA1c above 7.5%.
+  Confidence Score: 90%
+  Guideline Source: ADA Standards of Care, 2024.
+  Top 3 Similar Cases: Patients with HbA1c 8.0%-8.5% responded well to Metformin + lifestyle changes.
+  Latest Research: Article 'SGLT2 inhibitors for early intervention', Journal of Diabetes Care, 2024.
+  ```
 
 ---
 
@@ -204,6 +245,19 @@ Example Workflow:
 - **Monitoring**:
     - Logs: Integrate basic logging for errors and API usage.
     - Scalability checks: Simulate cloud deployments for load testing.
+
+#### Evaluation Metrics
+
+To assess chatbot performance, the following metrics will be used:
+
+- **Classification Metrics**:
+    - Accuracy and F1-score for outputs like drug recommendations and critical key phrases.
+- **Response Quality**:
+    - BLEU or ROUGE scores to measure alignment with gold-standard answers.
+- **Performance**:
+    - Response latency to ensure acceptable wait times.
+- **Feedback**:
+    - A basic like/dislike feedback system to identify areas for improvement.
 
 ---
 

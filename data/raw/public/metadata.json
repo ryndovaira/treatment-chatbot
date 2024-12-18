@@ -61,5 +61,26 @@
     "type": "research_paper",
     "title": "Optimal Dose and Type of Physical Activity to Improve Glycemic Control in People Diagnosed With Type 2 Diabetes: A Systematic Review and Meta-analysis",
     "file_name": "optimal_dose_type_physical_activity_type_2_diabetes_2024.pdf"
+  },
+  {
+    "source": "world_health_organization",
+    "year": 2020,
+    "type": "guideline",
+    "title": "Diagnosis and Management of Type 2 Diabetes (HEARTS-D)",
+    "file_name": "diagnosis_and_management_of_type_2_diabetes_2020.pdf"
+  },
+  {
+    "source": "world_health_organization",
+    "year": 2016,
+    "type": "handbook",
+    "title": "A Handbook on How to Implement mDiabetes",
+    "file_name": "handbook_on_how_to_implement_mdiabetes_2016.pdf"
+  },
+  {
+    "source": "world_health_organization",
+    "year": 2018,
+    "type": "guideline",
+    "title": "Guidelines on Second- and Third-line Medicines and Type of Insulin for the Control of Blood Glucose Levels in Non-pregnant Adults with Diabetes Mellitus",
+    "file_name": "guidelines_on_second_and_third_line_medicines_and_type_of_insulin_2018.pdf"
   }
 ]

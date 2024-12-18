@@ -173,3 +173,7 @@ cython_debug/
 # Local and temporary files
 tmp/
 temp/
+
+# Ignore all but PDFs in the raw data directories
+/data/raw/**/*
+!/data/raw/**/**/*.pdf

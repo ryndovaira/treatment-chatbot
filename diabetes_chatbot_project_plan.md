@@ -54,6 +54,11 @@
 The mock data will include:
 
 - **Edge Cases**: Extreme glucose levels, unusual symptoms, and mixed comorbidities (e.g., hypertension, obesity).
+    - Examples of edge cases:
+        - Hypoglycemia (blood glucose levels < 70 mg/dL) with frequent fainting episodes.
+        - Elderly patients (aged 80+) with multiple comorbidities (e.g., kidney disease, hypertension).
+        - Pregnant women with gestational diabetes and abnormal glucose tolerance curves.
+
 - **Types of Diabetes**: Type 1, Type 2, and gestational diabetes.
 - **Diverse Demographics**:
     - Age Groups: Children, adults, and elderly.

@@ -120,6 +120,15 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+## Cloning the Repository with Git LFS
+
+Ensure you have Git LFS installed before cloning:
+
+```bash
+git lfs install
+git clone <repository-url>
+
+
 ---
 
 ## **Usage**

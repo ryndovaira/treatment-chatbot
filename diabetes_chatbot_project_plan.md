@@ -247,9 +247,28 @@ The system will use **both fine-tuning and RAG** to achieve optimal results:
     - Unit tests: Pytest for backend and data pipelines.
     - API response checks for tone and relevance.
     - Manual validation of chatbot answers.
+
 - **Monitoring**:
     - Logs: Integrate basic logging for errors and API usage.
     - Scalability checks: Simulate cloud deployments for load testing.
+
+- **Feedback Management**:
+    - **MVP Implementation**:
+        - **Feedback Logging**: Implement a logging system to capture:
+            - User query, generated response, feedback (`like/dislike`), and context used.
+            - Store logs in JSON or a database for analysis.
+        - **Heuristic Categorization**: Use simple rules to detect:
+            - Incomplete responses (e.g., responses below a word count threshold).
+            - Missing details (e.g., absence of guideline references).
+
+    - **Optional Features (Post-MVP)**:
+        - **NLP-Based Categorization**:
+            - Use pretrained models like GPT-3.5 to analyze disliked responses and identify issues (e.g., tone
+              misalignment or incomplete recommendations).
+            - Automate issue detection with OpenAI API prompts for deeper analysis.
+        - **Iterative Refinement**:
+            - Utilize feedback logs to create new fine-tuning datasets.
+            - Retrain the model periodically to adapt to emerging patterns in feedback.
 
 #### Evaluation Metrics
 

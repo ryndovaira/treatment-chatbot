@@ -1,0 +1,65 @@
+[
+  {
+    "source": "world_health_organization",
+    "year": 2017,
+    "type": "guideline",
+    "title": "Best Buys and Other Recommended Interventions for the Prevention and Control of Noncommunicable Diseases",
+    "file_name": "best_buys_ncd_prevention_control_2017.pdf"
+  },
+  {
+    "source": "world_health_organization",
+    "year": 2024,
+    "type": "report",
+    "title": "Report of the Sixth Meeting of the WHO Technical Advisory Group on Diabetes: Virtual Meeting, 24-25 June 2024",
+    "file_name": "tagd_sixth_meeting_report_june_2024.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2023,
+    "type": "guideline",
+    "title": "Standards of Care in Diabetes—2023",
+    "file_name": "standards_of_care_in_diabetes_2023.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2024,
+    "type": "guideline",
+    "title": "Standards of Care in Diabetes—2024",
+    "file_name": "standards_of_care_in_diabetes_2024.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2025,
+    "type": "guideline",
+    "title": "Standards of Care in Diabetes—2025",
+    "file_name": "standards_of_care_in_diabetes_2025.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2024,
+    "type": "research_paper",
+    "title": "Optimal Dose and Type of Physical Activity to Improve Glycemic Control in People Diagnosed With Type 2 Diabetes: A Systematic Review and Meta-analysis",
+    "file_name": "optimal_dose_type_physical_activity_type_2_diabetes_2024.pdf"
+  },
+  {
+    "source": "world_health_organization",
+    "year": 2023,
+    "type": "guide",
+    "title": "WHO Standards for Prosthetics and Orthotics Assessment Package: User Manual",
+    "file_name": "who_standards_for_prosthetics_and_orthotics_assessment_package_user_manual_2023.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2024,
+    "type": "lecture",
+    "title": "A Diabetes Pregnancy Technology Roadmap: The 2023 Norbert Freinkel Award Lecture",
+    "file_name": "diabetes_pregnancy_technology_roadmap_norbert_freinkel_award_lecture_2023.pdf"
+  },
+  {
+    "source": "diabetesjournals_org",
+    "year": 2024,
+    "type": "research_paper",
+    "title": "Optimal Dose and Type of Physical Activity to Improve Glycemic Control in People Diagnosed With Type 2 Diabetes: A Systematic Review and Meta-analysis",
+    "file_name": "optimal_dose_type_physical_activity_type_2_diabetes_2024.pdf"
+  }
+]

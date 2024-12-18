@@ -1,9 +1,12 @@
-
 # **Treatment Chatbot for Diabetes Support**
 
-This project develops a **Retrieval-Augmented Generation (RAG)** chatbot to provide evidence-based **diabetes treatment recommendations**. The chatbot integrates **public medical guidelines** with simulated **private clinical data**, while adhering to real-world considerations like HIPAA compliance.
+This project develops a **Retrieval-Augmented Generation (RAG)** chatbot to provide evidence-based **diabetes treatment
+recommendations**.
+The chatbot integrates **public medical guidelines** with simulated **private clinical data**, while
+adhering to real-world considerations like HIPAA compliance.
 
 The main focus of the project is **learning**, including:
+
 - Building a modular and configurable pipeline.
 - Exploring multiple deployment options (Hetzner, AWS, Google Cloud, and Azure).
 - Experimenting with both on-premise-like and cloud-based LLaMA deployments.
@@ -13,14 +16,16 @@ The main focus of the project is **learning**, including:
 ## **Overview**
 
 The chatbot:
+
 - **Private Data**: Processed using **LLaMA 3** (simulating on-premise hosting).
 - **Public Data**: Retrieved and processed via **OpenAI's ChatGPT API**.
 - **Deployment Options**:
-   - **Hetzner Shared vCPU** for initial, low-cost deployment.
-   - **AWS/Google Cloud/Azure** for scalable, production-ready deployments.
+    - **Hetzner Shared vCPU** for initial, low-cost deployment.
+    - **AWS/Google Cloud/Azure** for scalable, production-ready deployments.
 - **LLaMA Deployment Strategies**:
-   1. **Fine-tune LLaMA locally**, then load and host it on cloud platforms (e.g., AWS EC2, Google Compute Engine, Azure VMs).
-   2. Use cloud-based **MLOps services** like Google Vertex AI, AWS SageMaker, or Azure ML for fine-tuning and serving.
+    1. **Fine-tune LLaMA locally**, then load and host it on cloud platforms (e.g., AWS EC2, Google Compute Engine,
+       Azure VMs).
+    2. Use cloud-based **MLOps services** like Google Vertex AI, AWS SageMaker, or Azure ML for fine-tuning and serving.
 
 This flexibility ensures a robust learning experience while simulating a real-world production pipeline.
 
@@ -82,30 +87,32 @@ treatment-chatbot/
 ## **Key Features**
 
 1. **Retrieval-Augmented Generation (RAG) Pipeline**:
-   - Combines public data (via ChatGPT API) and private data (via LLaMA 3) to generate accurate, evidence-based recommendations.
-   - Modular design with **FAISS** for local vector search and **Pinecone** for cloud-based indexing.
+    - Combines public data (via ChatGPT API) and private data (via LLaMA 3) to generate accurate, evidence-based
+      recommendations.
+    - Modular design with **FAISS** for local vector search and **Pinecone** for cloud-based indexing.
 
 2. **Simulated On-Premise Design**:
-   - **LLaMA 3** models are assumed to run "on-premise" for private data processing.
-   - Practical deployment uses rented servers or cloud solutions.
+    - **LLaMA 3** models are assumed to run "on-premise" for private data processing.
+    - Practical deployment uses rented servers or cloud solutions.
 
 3. **Public Data Processing**:
-   - Integrates with **OpenAI API (ChatGPT 3.5)** to process public data and guidelines.
+    - Integrates with **OpenAI API (ChatGPT 3.5)** to process public data and guidelines.
 
 4. **Deployment Options**:
-   - **Hetzner Shared vCPU**: Cost-effective for initial deployment.
-   - **AWS/Google Cloud/Azure**: Scalable, production-ready options for learning cloud deployments.
+    - **Hetzner Shared vCPU**: Cost-effective for initial deployment.
+    - **AWS/Google Cloud/Azure**: Scalable, production-ready options for learning cloud deployments.
 
 5. **LLaMA Deployment Strategies**:
-   - Fine-tune locally → Load and host the model on AWS EC2/Google Compute/Azure VM.
-   - Use cloud-based **MLOps services** (e.g., Google Vertex AI, AWS SageMaker, or Azure ML).
+    - Fine-tune locally → Load and host the model on AWS EC2/Google Compute/Azure VM.
+    - Use cloud-based **MLOps services** (e.g., Google Vertex AI, AWS SageMaker, or Azure ML).
 
 6. **Configurable Setup**:
-   - Model versions, API keys, and deployment options are configurable via `.env` files and YAML configurations in `config/`.
+    - Model versions, API keys, and deployment options are configurable via `.env` files and YAML configurations in
+      `config/`.
 
 7. **Interactive User Interface**:
-   - **Streamlit** frontend for easy chatbot interaction.
-   - **FastAPI** backend for efficient model serving.
+    - **Streamlit** frontend for easy chatbot interaction.
+    - **FastAPI** backend for efficient model serving.
 
 ---
 
@@ -116,6 +123,7 @@ treatment-chatbot/
 - **GPU**: NVIDIA GeForce MX450
 
 Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -145,6 +153,7 @@ LLAMA_MODEL_VERSION=8B
 ---
 
 ### **2. Run the Application**
+
 1. Start the **FastAPI backend**:
    ```bash
    python src/api/main.py
@@ -162,30 +171,30 @@ Access the chatbot at: `http://localhost:8501`
 ## **Deployment Options**
 
 1. **Hetzner Shared vCPU**:
-   - Use Docker for a simple and low-cost deployment:
-     ```bash
-     docker-compose up --build
-     ```
+    - Use Docker for a simple and low-cost deployment:
+      ```bash
+      docker-compose up --build
+      ```
 
 2. **AWS/Google Cloud/Azure**:
-   - Deploy the FastAPI backend and Streamlit frontend on EC2, Google Compute, or Azure VMs.
-   - Alternatively, use MLOps tools like Google Vertex AI or AWS SageMaker for fine-tuning and hosting LLaMA models.
+    - Deploy the FastAPI backend and Streamlit frontend on EC2, Google Compute, or Azure VMs.
+    - Alternatively, use MLOps tools like Google Vertex AI or AWS SageMaker for fine-tuning and hosting LLaMA models.
 
 3. **Switch Between Deployments**:
-   - Use environment variables in `.env` to toggle deployment configurations.
+    - Use environment variables in `.env` to toggle deployment configurations.
 
 ---
 
 ## **Future Work**
 
 1. **Performance Optimization**:
-   - Evaluate latency and resource usage across different deployment strategies.
+    - Evaluate latency and resource usage across different deployment strategies.
 
 2. **Advanced Monitoring**:
-   - Integrate logging and monitoring for API performance and model outputs.
+    - Integrate logging and monitoring for API performance and model outputs.
 
 3. **Larger Models**:
-   - Experiment with LLaMA 13B or other larger fine-tuned models for improved accuracy.
+    - Experiment with LLaMA 13B or other larger fine-tuned models for improved accuracy.
 
 ---
 

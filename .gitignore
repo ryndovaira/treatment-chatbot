@@ -173,3 +173,7 @@ cython_debug/
 # Local and temporary files
 tmp/
 temp/
+
+
+# pdf files
+*.pdf

@@ -10,6 +10,8 @@ from synthetic_data_config import (
     WEIGHT_RANGE,
     HEIGHT_RANGE,
     NUM_PATIENTS,
+    SYMPTOMS,
+    SYMPTOM_SEVERITY,
 )
 
 
@@ -35,6 +37,8 @@ def generate_patient_data(output_path):
                 "weight_kg",
                 "height_cm",
                 "bmi",
+                "symptoms",
+                "symptom_severity",
             ]
         )
 
@@ -58,8 +62,23 @@ def generate_patient_data(output_path):
             else:
                 pregnancy = None
 
+            # Randomly assign symptoms
+            symptoms = random.sample(SYMPTOMS, k=random.randint(1, 3))
+            symptom_severity = random.choice(SYMPTOM_SEVERITY)
+
             writer.writerow(
-                [patient_id, age, gender, ethnicity, pregnancy, weight_kg, height_cm, bmi]
+                [
+                    patient_id,
+                    age,
+                    gender,
+                    ethnicity,
+                    pregnancy,
+                    weight_kg,
+                    height_cm,
+                    bmi,
+                    "; ".join(symptoms),
+                    symptom_severity,
+                ]
             )
 
 

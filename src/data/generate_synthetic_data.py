@@ -67,7 +67,7 @@ def generate_patient_data(output_path):
 
 # Paths are relative to the project structure
 project_root = Path(__file__).resolve().parents[2]
-data_raw_private_dir = project_root / "data" / "raw"
+data_raw_private_dir = project_root / "data" / "raw" / "private"
 
 generate_patient_data(data_raw_private_dir)
 print(f"Data saved to {data_raw_private_dir / 'basic_patient_data.csv'}")

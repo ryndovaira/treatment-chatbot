@@ -180,5 +180,117 @@
     "type": "guideline",
     "title": "Introduction and Methodology: Standards of Care in Diabetes—2024",
     "file_name": "introduction_and_methodology_standards_of_care_in_diabetes_2024.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2015,
+    "type": "evidence_summary",
+    "title": "Diabetes Mellitus Type 1 and Type 2: Insulin Glargine Biosimilar (Abasaglar)",
+    "file_name": "diabetes_mellitus_type_1_and_type_2_insulin_glargine_biosimilar_abasaglar_2015.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2014,
+    "type": "technology_appraisal_guidance",
+    "title": "Canagliflozin in Combination Therapy for Treating Type 2 Diabetes",
+    "file_name": "canagliflozin_in_combination_therapy_for_treating_type_2_diabetes_2014.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2023,
+    "type": "quality_standard",
+    "title": "Type 2 Diabetes in Adults",
+    "file_name": "type_2_diabetes_in_adults_2023.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2016,
+    "type": "technology_appraisal_guidance",
+    "title": "Canagliflozin, Dapagliflozin, and Empagliflozin as Monotherapies for Treating Type 2 Diabetes",
+    "file_name": "canagliflozin_dapagliflozin_and_empagliflozin_as_monotherapies_for_treating_type_2_diabetes_2016.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2022,
+    "type": "guideline",
+    "title": "Type 1 Diabetes in Adults: Diagnosis and Management",
+    "file_name": "type_1_diabetes_in_adults_diagnosis_and_management_2022.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2013,
+    "type": "evidence_summary",
+    "title": "Type 2 Diabetes: Insulin Degludec",
+    "file_name": "type_2_diabetes_insulin_degludec_2013.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2015,
+    "type": "evidence_summary",
+    "title": "Type 2 Diabetes Mellitus in Adults: High-strength Insulin Glargine 300 Units/ml (Toujeo)",
+    "file_name": "type_2_diabetes_mellitus_in_adults_highstrength_insulin_glargine_300_unitsml_toujeo_2015.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2023,
+    "type": "guideline",
+    "title": "Diabetes (Type 1 and Type 2) in Children and Young People: Diagnosis and Management",
+    "file_name": "diabetes_type_1_and_type_2_in_children_and_young_people_diagnosis_and_management_2023.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2011,
+    "type": "public_health_guideline",
+    "title": "Type 2 Diabetes Prevention: Population and Community-Level Interventions",
+    "file_name": "type_2_diabetes_prevention_population_and_communitylevel_interventions_2011.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2015,
+    "type": "technology_appraisal_guidance",
+    "title": "Empagliflozin in Combination Therapy for Treating Type 2 Diabetes",
+    "file_name": "empagliflozin_in_combination_therapy_for_treating_type_2_diabetes_2015.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2019,
+    "type": "guideline",
+    "title": "Diabetic Foot Problems: Prevention and Management",
+    "file_name": "diabetic_foot_problems_prevention_and_management_2019.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2023,
+    "type": "quality_standard",
+    "title": "Type 1 Diabetes in Adults",
+    "file_name": "type_1_diabetes_in_adults_2023.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2023,
+    "type": "guideline",
+    "title": "Diabetes in Pregnancy",
+    "file_name": "diabetes_in_pregnancy_2023.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2022,
+    "type": "guideline",
+    "title": "Type 2 Diabetes in Adults: Management",
+    "file_name": "type_2_diabetes_in_adults_management_2022.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2022,
+    "type": "guideline",
+    "title": "Diabetes in Children and Young People",
+    "file_name": "diabetes_in_children_and_young_people_2022.pdf"
+  },
+  {
+    "source": "nice_org_uk",
+    "year": 2020,
+    "type": "guideline",
+    "title": "Diabetes in Pregnancy: Management from Preconception to the Postnatal Period",
+    "file_name": "diabetes_in_pregnancy_management_from_preconception_to_the_postnatal_period_2020.pdf"
   }
 ]

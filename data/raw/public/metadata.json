@@ -1,13 +1,6 @@
 [
   {
     "source": "world_health_organization",
-    "year": 2017,
-    "type": "guideline",
-    "title": "Best Buys and Other Recommended Interventions for the Prevention and Control of Noncommunicable Diseases",
-    "file_name": "best_buys_ncd_prevention_control_2017.pdf"
-  },
-  {
-    "source": "world_health_organization",
     "year": 2024,
     "type": "report",
     "title": "Report of the Sixth Meeting of the WHO Technical Advisory Group on Diabetes: Virtual Meeting, 24-25 June 2024",
@@ -43,38 +36,10 @@
   },
   {
     "source": "world_health_organization",
-    "year": 2023,
-    "type": "guide",
-    "title": "WHO Standards for Prosthetics and Orthotics Assessment Package: User Manual",
-    "file_name": "who_standards_for_prosthetics_and_orthotics_assessment_package_user_manual_2023.pdf"
-  },
-  {
-    "source": "diabetesjournals_org",
-    "year": 2024,
-    "type": "lecture",
-    "title": "A Diabetes Pregnancy Technology Roadmap: The 2023 Norbert Freinkel Award Lecture",
-    "file_name": "diabetes_pregnancy_technology_roadmap_norbert_freinkel_award_lecture_2023.pdf"
-  },
-  {
-    "source": "diabetesjournals_org",
-    "year": 2024,
-    "type": "research_paper",
-    "title": "Optimal Dose and Type of Physical Activity to Improve Glycemic Control in People Diagnosed With Type 2 Diabetes: A Systematic Review and Meta-analysis",
-    "file_name": "optimal_dose_type_physical_activity_type_2_diabetes_2024.pdf"
-  },
-  {
-    "source": "world_health_organization",
     "year": 2020,
     "type": "guideline",
     "title": "Diagnosis and Management of Type 2 Diabetes (HEARTS-D)",
     "file_name": "diagnosis_and_management_of_type_2_diabetes_2020.pdf"
-  },
-  {
-    "source": "world_health_organization",
-    "year": 2016,
-    "type": "handbook",
-    "title": "A Handbook on How to Implement mDiabetes",
-    "file_name": "handbook_on_how_to_implement_mdiabetes_2016.pdf"
   },
   {
     "source": "world_health_organization",
@@ -103,13 +68,6 @@
     "type": "report",
     "title": "The Global Diabetes Compact - Progress in Supporting Its Workstreams: Technical Report",
     "file_name": "the_global_diabetes_compact_progress_in_supporting_its_workstreams_2024.pdf"
-  },
-  {
-    "source": "world_health_organization",
-    "year": 2023,
-    "type": "summary",
-    "title": "Tobacco and Diabetes",
-    "file_name": "tobacco_and_diabetes_2023.pdf"
   },
   {
     "source": "diabetesjournals_org",
@@ -294,73 +252,10 @@
     "file_name": "diabetes_in_pregnancy_management_from_preconception_to_the_postnatal_period_2020.pdf"
   },
   {
-    "source": "journal_of_diabetology",
-    "year": 2024,
-    "type": "case_report",
-    "title": "Complex of Hybrid Diabetes Mellitus with Severe Insulin Resistance and Cerebrovascular Complications",
-    "file_name": "complex_of_hybrid_diabetes_mellitus_with_severe_insulin_resistance_and_cerebrovascular_complications_2024.pdf"
-  },
-  {
-    "source": "wiley_online_library",
-    "year": 2014,
-    "type": "research_article",
-    "title": "Impact of HbA1c Measurement on Hospital Readmission Rates: Analysis of 70,000 Clinical Database Patient Records",
-    "file_name": "impact_of_hba1c_measurement_on_hospital_readmission_rates_analysis_of_70000_clinical_database_patient_records_2014.pdf"
-  },
-  {
-    "source": "journal_of_diabetology",
-    "year": 2024,
-    "type": "letter_to_the_editor",
-    "title": "Depression in Patients With Type 2 Diabetes Mellitus: Currently Most Beneficial Therapeutic Options",
-    "file_name": "depression_in_patients_with_type_2_diabetes_mellitus_currently_most_beneficial_therapeutic_options_2024.pdf"
-  },
-  {
-    "source": "amjcaserep",
-    "year": 2024,
-    "type": "case_report",
-    "title": "A Rare Case of Congenital Nephrogenic Diabetes Insipidus Associated with Aquaporin 2 Gene Mutation and Subsequent Acute Lymphoblastic Leukemia: Impact of Steroids on Kidney Function",
-    "file_name": "a_rare_case_of_congenital_nephrogenic_diabetes_insipidus_associated_with_aquaporin_2_gene_mutation_and_subsequent_acute_lymphoblastic_leukemia_impact_of_steroids_on_kidney_function_2024.pdf"
-  },
-  {
-    "source": "jcem_case_reports",
-    "year": 2024,
-    "type": "case_report",
-    "title": "Diabetes Insipidus Complicating Diabetes Mellitus Type 1: A Pituitary Abscess Diagnosis",
-    "file_name": "diabetes_insipidus_complicating_diabetes_mellitus_type_1_a_pituitary_abscess_diagnosis_2024.pdf"
-  },
-  {
     "source": "cureus",
     "year": 2023,
     "type": "review_article",
     "title": "The Role of Childhood Obesity in Early-Onset Type 2 Diabetes Mellitus: A Scoping Review",
     "file_name": "the_role_of_childhood_obesity_in_early_onset_type_2_diabetes_mellitus_a_scoping_review_2023.pdf"
-  },
-  {
-    "source": "diabetes_care",
-    "year": 2024,
-    "type": "review_article",
-    "title": "Atypical Diabetes: What Have We Learned and What Does the Future Hold?",
-    "file_name": "atypical_diabetes_what_have_we_learned_and_what_does_the_future_hold_2024.pdf"
-  },
-  {
-    "source": "jcem",
-    "year": 2022,
-    "type": "mini_review",
-    "title": "Diagnosis and Management of Central Diabetes Insipidus in Adults",
-    "file_name": "diagnosis_and_management_of_central_diabetes_insipidus_in_adults_2022.pdf"
-  },
-  {
-    "source": "jcem",
-    "year": 2024,
-    "type": "research_article",
-    "title": "Psychosocial Factors and the Role of Family in Children with Type 1 Diabetes Mellitus",
-    "file_name": "psychosocial_factors_and_the_role_of_family_in_children_with_type_1_diabetes_mellitus_2024.pdf"
-  },
-  {
-    "source": "cureus",
-    "year": 2021,
-    "type": "review_article",
-    "title": "Diabetes Insipidus: Pathogenesis, Diagnosis, and Clinical Management",
-    "file_name": "diabetes_insipidus_pathogenesis_diagnosis_and_clinical_management_2021.pdf"
   }
 ]

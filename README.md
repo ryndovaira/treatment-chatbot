@@ -39,8 +39,9 @@ This flexibility ensures a robust learning experience while simulating a real-wo
 4. [Usage](#usage)
 5. [Deployment Options](#deployment-options)
 6. [Configurations](#configurations)
-7. [Future Work](#future-work)
-8. [About the Author](#about-the-author)
+7. [Data Gathering](#data-gathering)
+8. [Future Work](#future-work)
+9. [About the Author](#about-the-author)
 
 ---
 
@@ -182,6 +183,32 @@ Access the chatbot at: `http://localhost:8501`
 
 3. **Switch Between Deployments**:
     - Use environment variables in `.env` to toggle deployment configurations.
+
+---
+
+## Data Gathering
+
+This project involves gathering both public and simulated private data to support the development of the diabetes
+treatment chatbot.
+
+### Public Data
+
+We collect:
+
+- **Clinical Guidelines**: e.g., ADA Standards of Care, NICE guidelines.
+- **Research Articles**: e.g., PubMed Central and bioRxiv papers.
+- **Open Datasets**: e.g., UCI Machine Learning Repository and WHO statistics.
+
+### Simulated Private Data
+
+We generate:
+
+- **Patient Demographics**: Age, gender, BMI, and more.
+- **Lab Results**: HbA1c, glucose, cholesterol levels.
+- **Symptoms and Treatments**: Including edge cases and longitudinal data.
+
+For detailed data sources, methods, and examples, refer to the [Project Plan](./diabetes_chatbot_project_plan.md).
+
 
 ---
 

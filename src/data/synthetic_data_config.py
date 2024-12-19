@@ -1,5 +1,5 @@
 # The number of patient records to generate. Default is 1500.
-NUM_PATIENTS = 5
+NUM_PATIENTS = 1500
 
 # Age ranges for different demographic groups
 AGE_RANGES = {"children": (1, 17), "adults": (18, 64), "elderly": (65, 90)}
@@ -14,11 +14,20 @@ ETHNICITIES = ["Asian", "Caucasian", "African American", "Hispanic", "Other"]
 PREGNANCY_STATUSES = ["Pregnant", "Not Pregnant", None]
 
 # Weight (kg) and height (cm) ranges
-WEIGHT_RANGE = (40, 150)
+WEIGHT_RANGE = (40, 180)  # Updated to include extreme obesity cases
 HEIGHT_RANGE = (140, 200)
 
 # Symptoms
-SYMPTOMS = ["Fatigue", "Frequent urination", "Blurred vision", "Weight loss", "Thirst"]
+SYMPTOMS = [
+    "Fatigue",
+    "Frequent urination",
+    "Blurred vision",
+    "Weight loss",
+    "Thirst",
+    "Slow-healing wounds",
+    "Tingling or numbness in extremities",
+    "Dry mouth",
+]
 
 # Severity levels for symptoms
 SYMPTOM_SEVERITY = ["Mild", "Moderate", "Severe"]

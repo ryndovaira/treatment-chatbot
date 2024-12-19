@@ -24,3 +24,8 @@ faker
 # Testing and Utilities
 pytest
 black
+
+
+# Visualizations
+matplotlib
+seaborn

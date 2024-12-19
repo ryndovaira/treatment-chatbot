@@ -49,6 +49,89 @@
     - Structured: CSV, JSON.
     - Unstructured: PDFs, markdown files.
 
+#### Public Data
+
+1. **Clinical Guidelines**
+    - **Purpose**: Provide evidence-based recommendations for diabetes management.
+    - **Sources**:
+        - American Diabetes Association (ADA) Standards of Care: [ADA Website](https://diabetesjournals.org/care)
+        - World Health Organization (WHO) Diabetes Guidelines: [WHO Website](https://www.who.int/publications)
+        - National Institute for Health and Care Excellence (NICE): [NICE Guidance](https://www.nice.org.uk/guidance)
+    - **Format**: PDF documents, openly available for download.
+
+2. **Research Articles**
+    - **Purpose**: Offer advancements and edge-case insights for treatment recommendations.
+    - **Sources**:
+        - PubMed Central (PMC) Open-Access Articles: [PMC Website](https://www.ncbi.nlm.nih.gov/pmc/)
+        - Directory of Open Access Journals (DOAJ): [DOAJ Website](https://doaj.org/)
+    - **Format**: PDF downloads, openly accessible.
+
+3. **Publicly Available Datasets**
+    - **Purpose**: Provide structured, real-world data for training and validation.
+    - **Sources**:
+        - UCI Machine Learning Repository - Pima Indians Diabetes
+          Dataset: [UCI Repository](https://archive.ics.uci.edu/ml/datasets/diabetes)
+        - Kaggle Open Datasets: [Kaggle](https://www.kaggle.com/)
+        - WHO Global Health Observatory Data: [WHO Data](https://www.who.int/data/gho)
+    - **Format**: CSV or JSON.
+
+#### Simulated Private Data
+
+1. **Patient Demographics**
+    - **Purpose**: Provide diversity in age, gender, BMI, lifestyle, and socioeconomic status.
+    - **Fields**: Age, Gender, BMI, Smoking Status, Physical Activity Level, Socioeconomic Status.
+    - **Generation**: Generated using Python libraries such as `faker` and `numpy`.
+
+2. **Lab Results**
+    - **Purpose**: Include key diabetes-related indicators (e.g., HbA1c, glucose).
+    - **Fields**: HbA1c (%), Fasting Glucose (mg/dL), Cholesterol Levels, Blood Pressure.
+    - **Generation**: Programmatically generated to reflect realistic patient data distributions.
+
+3. **Symptoms and Comorbidities**
+    - **Purpose**: Define key symptoms and associated conditions.
+    - **Fields**: Frequent urination, fatigue, blurred vision, comorbidities (e.g., hypertension, obesity).
+    - **Generation**: Custom combinations generated to align with patient demographics.
+
+4. **Treatments**
+    - **Purpose**: Provide histories of medications and lifestyle interventions.
+    - **Fields**: Medications (e.g., metformin, insulin), Dosage, Duration, Lifestyle Interventions.
+    - **Generation**: Simulated based on clinical guideline recommendations.
+
+5. **Longitudinal Data**
+    - **Purpose**: Simulate the progression of diabetes over time for selected patients.
+    - **Fields**: Timeline of lab values (HbA1c, glucose), Response to treatment.
+    - **Generation**: Synthetic time-series data generated to track patient progress.
+
+#### Data Format
+
+1. **Structured Data**:
+    - **Format**: CSV or JSON for tabular data like demographics, lab results, and treatments.
+2. **Unstructured Data**:
+    - **Format**: Markdown or plain text for clinical guidelines and research articles.
+
+#### Tools and Techniques for Data Gathering
+
+1. **Manual Download**:
+    - Some sources like UCI datasets, WHO guidelines, and ADA resources require manual downloads.
+2. **Synthetic Data Generation**:
+    - Use Python libraries (`faker`, `numpy`, `pandas`) to create mock patient data for demographics, lab results, and
+      treatments.
+    - Design templates for edge cases and longitudinal data.
+
+#### Summary of Actions
+
+1. **Public Data**:
+    - Download diabetes guidelines from ADA, WHO, and NICE.
+    - Collect research articles from PubMed Central and DOAJ.
+    - Obtain datasets from UCI, Kaggle, and WHO.
+2. **Simulated Private Data**:
+    - Use Python to generate synthetic data for demographics, lab results, symptoms, treatments, and longitudinal
+      patient records.
+3. **Organization**:
+    - Store downloaded and generated data in structured folders (e.g., `data/raw/public`, `data/raw/private`).
+4. **Documentation**:
+    - Maintain a metadata file to log all sources and ensure reproducibility.
+
 #### Mock Data Design
 
 The mock data will include:

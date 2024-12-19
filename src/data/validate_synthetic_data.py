@@ -8,6 +8,10 @@ from synthetic_data_config import OUTPUT_FILE, RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)
 
+# Define output directory for plots
+PLOTS_DIR = OUTPUT_FILE.parent.parent / "private" / "verification_results"
+PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # Load the synthetic data
 def load_data(file_path):
@@ -15,6 +19,13 @@ def load_data(file_path):
         return pd.read_csv(file_path)
     except Exception as e:
         raise FileNotFoundError(f"Error loading file at {file_path}: {e}")
+
+
+# Save plots to the verification_results directory
+def save_plot(plot, filename):
+    plot_path = PLOTS_DIR / filename
+    plt.savefig(plot_path, bbox_inches="tight")
+    print(f"Plot saved to {plot_path}")
 
 
 # Generate visualizations and checks
@@ -42,7 +53,8 @@ def verify_synthetic_data():
         plt.xlabel(col)
         plt.ylabel("Frequency")
         plt.grid()
-        plt.show()
+        save_plot(plt, f"{col}_distribution.png")
+        plt.close()
 
     # Categorical data distributions
     categorical_cols = df.select_dtypes(include=["object"]).columns
@@ -53,7 +65,8 @@ def verify_synthetic_data():
         plt.xlabel("Frequency")
         plt.ylabel(col)
         plt.grid()
-        plt.show()
+        save_plot(plt, f"{col}_distribution.png")
+        plt.close()
 
 
 if __name__ == "__main__":

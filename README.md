@@ -1,4 +1,4 @@
-# **Treatment Chatbot for Diabetes Support**
+# **Treatment Chatbot for Diabetes (Diabetes Mellitus) Support**
 
 This project develops a **Retrieval-Augmented Generation (RAG)** chatbot to provide evidence-based **diabetes treatment
 recommendations**.

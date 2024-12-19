@@ -142,7 +142,7 @@ The mock data will include:
         - Elderly patients (aged 80+) with multiple comorbidities (e.g., kidney disease, hypertension).
         - Pregnant women with gestational diabetes and abnormal glucose tolerance curves.
 
-- **Types of Diabetes**: Type 1, Type 2, and gestational diabetes.
+- **Types of Diabetes (Diabetes Mellitus)**: Type 1, Type 2, and gestational diabetes.
 - **Diverse Demographics**:
     - Age Groups: Children, adults, and elderly.
     - Gender: Male and female.

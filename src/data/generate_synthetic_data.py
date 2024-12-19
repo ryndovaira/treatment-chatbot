@@ -13,7 +13,11 @@ from synthetic_data_config import (
     CO_MORBIDITIES,
     LAB_RANGES,
     NUM_PATIENTS,
+    RANDOM_SEED,
 )
+
+# Set random seed for reproducibility
+random.seed(RANDOM_SEED)
 
 
 # Generate Demographics

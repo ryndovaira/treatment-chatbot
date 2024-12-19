@@ -4,7 +4,9 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "private"
 OUTPUT_FILE = DATA_DIR / "basic_patient_data.csv"
 
+# Configuration
 NUM_PATIENTS = 1500
+RANDOM_SEED = 42  # Seed for reproducibility
 
 # Gender categories
 GENDERS = ["Male", "Female"]

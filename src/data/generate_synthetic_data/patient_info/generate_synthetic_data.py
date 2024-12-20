@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from synthetic_data_config import (
+from src.data.generate_synthetic_data.synthetic_data_config import (
     OUTPUT_FILE,
     GENDERS,
     ETHNICITIES,

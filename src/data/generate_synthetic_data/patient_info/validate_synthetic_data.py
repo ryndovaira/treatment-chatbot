@@ -5,7 +5,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from synthetic_data_config import OUTPUT_FILE, RANDOM_SEED, LOG_FILE_V, PLOTS_DIR
+from src.data.generate_synthetic_data.synthetic_data_config import (
+    OUTPUT_FILE,
+    RANDOM_SEED,
+    LOG_FILE_V,
+    PLOTS_DIR,
+)
 
 np.random.seed(RANDOM_SEED)
 

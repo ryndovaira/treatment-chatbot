@@ -34,3 +34,4 @@ python-dotenv
 
 # OpenAI API
 openai
+tiktoken

@@ -1,4 +1,3 @@
-import json
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -31,12 +30,10 @@ class TreatmentHistoryEntry(BaseModel):
 
 class PatientData(BaseModel):
     current_medications: List[Medication] = Field(
-        ...,
-        description="List of current medications with details (name, dosage, frequency, duration)",
+        ..., description="List of current medications with details"
     )
     treatment_history: List[TreatmentHistoryEntry] = Field(
-        ...,
-        description="Patient's treatment history with dates, medications, and reasons for changes",
+        ..., description="Patient's treatment history"
     )
     lifestyle_recommendations: List[str] = Field(
         ..., description="List of lifestyle recommendations for the patient"
@@ -55,7 +52,6 @@ def validate_model_support(model: str):
 def log_patient_data(input_data, output_data, errors):
     """Log input, output, and error data for patient processing."""
     logger.info("=== Patient Data Log Start ===")
-
     for idx, input_record in enumerate(input_data, start=1):
         patient_id = input_record.get("patient_id", "unknown")
         record_id = input_record.get("record_id", "unknown")
@@ -64,34 +60,22 @@ def log_patient_data(input_data, output_data, errors):
         logger.info(
             f"Processing Patient ID: {patient_id}, Record ID: {record_id}, Date: {record_date}"
         )
+        logger.info(f"Input Data: {input_record}")
 
-        # Format input data for logging
-        formatted_input = json.dumps(input_record, indent=4, default=str)
-        logger.info(f"Input Data: {formatted_input}")
-
-        # Log output or error
         output_record = output_data[idx - 1] if idx - 1 < len(output_data) else None
         error = errors[idx - 1] if idx - 1 < len(errors) else None
 
         if output_record:
-            # Summarize the output
-            recommendations = output_record.lifestyle_recommendations
-            current_meds = [med.name for med in output_record.current_medications]
-            treatment_changes = [
-                {
-                    "date_started": entry.date_started,
-                    "reason_for_change": entry.reason_for_change,
-                }
-                for entry in output_record.treatment_history
-                if entry.reason_for_change
-            ]
-
+            logger.info("Output Summary:")
             logger.info(
-                f"Output Summary:\n"
-                f"- Current Medications: {current_meds}\n"
-                f"- Lifestyle Recommendations: {recommendations}\n"
-                f"- Treatment Changes: {treatment_changes}"
+                f"- Current Medications: {[med.name for med in output_record.current_medications]}"
             )
+            logger.info(f"- Lifestyle Recommendations: {output_record.lifestyle_recommendations}")
+            logger.info("- Treatment Changes:")
+            for th in output_record.treatment_history:
+                logger.info(
+                    f"  - Date Started: {th.date_started}, Reason for Change: {th.reason_for_change}"
+                )
         elif error:
             logger.error(f"Error: {error}")
         else:

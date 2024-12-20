@@ -1,3 +1,4 @@
+import json
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -55,19 +56,46 @@ def log_patient_data(input_data, output_data, errors):
     """Log input, output, and error data for patient processing."""
     logger.info("=== Patient Data Log Start ===")
 
-    # Iterate through input, output, and error data together
     for idx, input_record in enumerate(input_data, start=1):
-        logger.info(f"Patient {idx} Input: {input_record}")
+        patient_id = input_record.get("patient_id", "unknown")
+        record_id = input_record.get("record_id", "unknown")
+        record_date = input_record.get("record_date", "unknown")
 
+        logger.info(
+            f"Processing Patient ID: {patient_id}, Record ID: {record_id}, Date: {record_date}"
+        )
+
+        # Format input data for logging
+        formatted_input = json.dumps(input_record, indent=4, default=str)
+        logger.info(f"Input Data: {formatted_input}")
+
+        # Log output or error
         output_record = output_data[idx - 1] if idx - 1 < len(output_data) else None
         error = errors[idx - 1] if idx - 1 < len(errors) else None
 
         if output_record:
-            logger.info(f"Patient {idx} Output: {output_record}")
+            # Summarize the output
+            recommendations = output_record.lifestyle_recommendations
+            current_meds = [med.name for med in output_record.current_medications]
+            treatment_changes = [
+                {
+                    "date_started": entry.date_started,
+                    "reason_for_change": entry.reason_for_change,
+                }
+                for entry in output_record.treatment_history
+                if entry.reason_for_change
+            ]
+
+            logger.info(
+                f"Output Summary:\n"
+                f"- Current Medications: {current_meds}\n"
+                f"- Lifestyle Recommendations: {recommendations}\n"
+                f"- Treatment Changes: {treatment_changes}"
+            )
         elif error:
-            logger.error(f"Patient {idx} Error: {error}")
+            logger.error(f"Error: {error}")
         else:
-            logger.warning(f"Patient {idx} No output or error recorded.")
+            logger.warning("No output or error recorded.")
 
     logger.info("=== Patient Data Log End ===")
 

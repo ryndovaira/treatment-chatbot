@@ -31,3 +31,6 @@ seaborn
 
 # Environment Configuration
 python-dotenv
+
+# OpenAI API
+openai

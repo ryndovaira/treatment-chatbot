@@ -11,13 +11,15 @@ logger = setup_logger(__name__)
 
 class Medication(BaseModel):
     name: str = Field(..., description="Name of the medication")
-    dosage: str = Field(..., description="Dosage of the medication")
-    frequency: str = Field(..., description="Frequency of intake")
-    duration: str = Field(..., description="Duration of usage")
+    dosage: str = Field(..., description="Dosage of the medication (e.g., '500 mg')")
+    frequency: str = Field(..., description="Frequency of intake (e.g., 'Once daily')")
+    duration: str = Field(..., description="Duration of usage (e.g., '6 months', 'Ongoing')")
 
 
 class TreatmentHistoryEntry(BaseModel):
-    date_started: str = Field(..., description="Start date of the treatment")
+    date_started: str = Field(
+        ..., description="Start date of the treatment (ISO format YYYY-MM-DD)"
+    )
     medications: List[Medication] = Field(
         ..., description="List of medications used during this period"
     )
@@ -29,11 +31,11 @@ class TreatmentHistoryEntry(BaseModel):
 class PatientData(BaseModel):
     current_medications: List[Medication] = Field(
         ...,
-        description="List of current medications with details like name, dosage, frequency, and duration",
+        description="List of current medications with details (name, dosage, frequency, duration)",
     )
     treatment_history: List[TreatmentHistoryEntry] = Field(
         ...,
-        description="Patient's treatment history with start dates, medications, and reasons for medication changes",
+        description="Patient's treatment history with dates, medications, and reasons for changes",
     )
     lifestyle_recommendations: List[str] = Field(
         ..., description="List of lifestyle recommendations for the patient"
@@ -41,6 +43,7 @@ class PatientData(BaseModel):
 
 
 def validate_model_support(model: str):
+    """Validate the configured model to ensure it supports Structured Outputs."""
     if not model.startswith("gpt-4o") and not model.startswith("o1"):
         raise ValueError(
             f"The configured model '{model}' is not supported for Structured Outputs. "
@@ -48,9 +51,24 @@ def validate_model_support(model: str):
         )
 
 
+def log_patient_data(input_data, output_data, errors):
+    """Log input and output patient data for debugging and medical validation."""
+    logger.info("=== Patient Data Log Start ===")
+    for idx, (input_record, output_record, error) in enumerate(
+        zip(input_data, output_data, errors), 1
+    ):
+        logger.info(f"Patient {idx} Input: {input_record}")
+        if output_record:
+            logger.info(f"Patient {idx} Output: {output_record}")
+        else:
+            logger.error(f"Patient {idx} Error: {error}")
+    logger.info("=== Patient Data Log End ===")
+
+
 def generate_patient_additional_data(
     patient_records, model=OPENAI_MODEL, max_tokens=OPENAI_MAX_TOKENS, log_errors=False
 ):
+    """Generate structured patient data using OpenAI."""
     client = get_openai_client()
     structured_data = []
     errors = []
@@ -95,10 +113,12 @@ def generate_patient_additional_data(
                 with open("error_log.txt", "a") as log_file:
                     log_file.write(error_msg + "\n")
 
+    log_patient_data(patient_records, structured_data, errors)
     return structured_data, errors
 
 
 def process_patient_data(patient_records, test_mode=True, test_limit=5):
+    """Process patient data in test or full mode."""
     if test_mode:
         logger.info("Running in test mode, limiting records.")
         patient_records = patient_records[:test_limit]

@@ -14,6 +14,7 @@ from synthetic_data_config import (
     LAB_RANGES,
     NUM_PATIENTS,
     RANDOM_SEED,
+    LOG_FILE_G,
 )
 
 # Set random seed for reproducibility
@@ -32,6 +33,12 @@ def generate_demographics(patient_id):
     weight_kg = round(random.uniform(30, 180), 1)
     height_cm = round(random.uniform(140, 200), 1)
     bmi = round(weight_kg / ((height_cm / 100) ** 2), 1)
+
+    # Validate BMI
+    if not (10 <= bmi <= 60):
+        raise ValueError(
+            f"Generated BMI {bmi} is outside the expected range for patient {patient_id}"
+        )
 
     return {
         "patient_id": patient_id,
@@ -113,10 +120,22 @@ def generate_patient_data(patient_id):
 
 # Generate dataset
 def generate_dataset():
-    data = [generate_patient_data(patient_id) for patient_id in range(1, NUM_PATIENTS + 1)]
+    data = []
+    skipped = 0
+
+    for patient_id in range(1, NUM_PATIENTS + 1):
+        try:
+            patient_data = generate_patient_data(patient_id)
+            data.append(patient_data)
+        except ValueError as e:
+            skipped += 1
+            with open(LOG_FILE_G, "a") as log_file:
+                log_file.write(f"Skipping patient {patient_id}: {e}\n")
+            print(f"Skipping patient {patient_id}: {e}")
+
     df = pd.DataFrame(data)
     df.to_csv(OUTPUT_FILE, index=False)
-    print(f"Dataset saved to {OUTPUT_FILE}")
+    print(f"Dataset saved to {OUTPUT_FILE}. {len(data)} patients generated, {skipped} skipped.")
 
 
 # Run the script

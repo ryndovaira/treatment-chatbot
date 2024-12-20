@@ -52,16 +52,23 @@ def validate_model_support(model: str):
 
 
 def log_patient_data(input_data, output_data, errors):
-    """Log input and output patient data for debugging and medical validation."""
+    """Log input, output, and error data for patient processing."""
     logger.info("=== Patient Data Log Start ===")
-    for idx, (input_record, output_record, error) in enumerate(
-        zip(input_data, output_data, errors), 1
-    ):
+
+    # Iterate through input, output, and error data together
+    for idx, input_record in enumerate(input_data, start=1):
         logger.info(f"Patient {idx} Input: {input_record}")
+
+        output_record = output_data[idx - 1] if idx - 1 < len(output_data) else None
+        error = errors[idx - 1] if idx - 1 < len(errors) else None
+
         if output_record:
             logger.info(f"Patient {idx} Output: {output_record}")
-        else:
+        elif error:
             logger.error(f"Patient {idx} Error: {error}")
+        else:
+            logger.warning(f"Patient {idx} No output or error recorded.")
+
     logger.info("=== Patient Data Log End ===")
 
 

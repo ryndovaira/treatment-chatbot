@@ -25,7 +25,9 @@ faker
 pytest
 black
 
-
 # Visualizations
 matplotlib
 seaborn
+
+# Environment Configuration
+python-dotenv

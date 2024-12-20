@@ -1,7 +1,7 @@
 from pathlib import Path
 
 # Path configuration
-DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "private"
+DATA_DIR = Path(__file__).resolve().parents[4] / "data" / "raw" / "private"
 OUTPUT_FILE = DATA_DIR / "basic_patient_data.csv"
 LOG_FILE_G = OUTPUT_FILE.parent / "generation_log.txt"
 
@@ -14,7 +14,7 @@ VERIFICATION_DIR.mkdir(parents=True, exist_ok=True)
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Configuration
-NUM_PATIENTS = 1500  # Number of synthetic patients to generate
+NUM_PATIENTS = 750  # Number of synthetic patients to generate
 RANDOM_SEED = 42  # Seed for reproducibility
 
 # Gender categories

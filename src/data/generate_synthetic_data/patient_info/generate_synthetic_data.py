@@ -97,45 +97,51 @@ def generate_conditions():
 
 
 # Generate Longitudinal Data
-def generate_longitudinal_data():
+def generate_longitudinal_data(record_index):
     record_date = datetime.today() - timedelta(days=random.randint(0, 365 * 5))
-    record_order = random.randint(1, 5)
     return {
+        "record_id": record_index,
         "record_date": record_date.strftime("%Y-%m-%d"),
-        "record_order": record_order,
     }
 
 
-# Generate a single patient record
+# Generate Records for Each Patient
 def generate_patient_data(patient_id):
     demographics = generate_demographics(patient_id)
-    lab_results = generate_lab_results(
-        demographics["age"], demographics["gender"], demographics["pregnancy_status"]
-    )
-    conditions = generate_conditions()
-    longitudinal_data = generate_longitudinal_data()
+    records = []
+    num_records = random.randint(1, 5)
 
-    return {**demographics, **lab_results, **conditions, **longitudinal_data}
+    for record_index in range(1, num_records + 1):
+        lab_results = generate_lab_results(
+            demographics["age"], demographics["gender"], demographics["pregnancy_status"]
+        )
+        conditions = generate_conditions()
+        longitudinal_data = generate_longitudinal_data(record_index)
+        records.append({**demographics, **lab_results, **conditions, **longitudinal_data})
+
+    return records
 
 
 # Generate dataset
 def generate_dataset():
-    data = []
+    all_records = []
     skipped = 0
 
     for patient_id in range(1, NUM_PATIENTS + 1):
         try:
-            patient_data = generate_patient_data(patient_id)
-            data.append(patient_data)
+            patient_records = generate_patient_data(patient_id)
+            all_records.extend(patient_records)
         except ValueError as e:
             skipped += 1
             with open(LOG_FILE_G, "a") as log_file:
                 log_file.write(f"Skipping patient {patient_id}: {e}\n")
             print(f"Skipping patient {patient_id}: {e}")
 
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(all_records)
     df.to_csv(OUTPUT_FILE, index=False)
-    print(f"Dataset saved to {OUTPUT_FILE}. {len(data)} patients generated, {skipped} skipped.")
+    print(
+        f"Dataset saved to {OUTPUT_FILE}. {len(all_records)} records generated across {NUM_PATIENTS} patients, {skipped} patients skipped."
+    )
 
 
 # Run the script

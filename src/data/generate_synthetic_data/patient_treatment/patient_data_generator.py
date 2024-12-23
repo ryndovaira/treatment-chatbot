@@ -139,7 +139,7 @@ def generate_patient_additional_data(
 def process_patient_data(patient_records, test_mode=True, test_limit=5):
     """Process patient data in test or full mode."""
     if test_mode:
-        logger.info("Running in test mode, limiting records.")
+        logger.info(f"Running in test mode, limiting records ({test_limit}).")
         patient_records = patient_records[:test_limit]
 
     return generate_patient_additional_data(patient_records)

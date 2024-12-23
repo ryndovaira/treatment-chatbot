@@ -5,7 +5,6 @@ import pandas as pd
 
 from src.data.generate_synthetic_data.patient_treatment.patient_data_generator import (
     process_patient_data,
-    validate_model_support,
 )
 from src.data.generate_synthetic_data.synthetic_data_config import DATA_DIR
 
@@ -64,15 +63,6 @@ def validate_longitudinal_data(data):
 def main():
     print(f"Loading patient data from: {INPUT_FILE}")
     patient_data = load_patient_data(INPUT_FILE)
-
-    # Validate the model's compatibility
-    print(f"Validating OpenAI model: {OPENAI_MODEL}")
-    try:
-        validate_model_support(OPENAI_MODEL)
-        print("Model validation passed.")
-    except ValueError as e:
-        print(f"Model validation failed: {e}")
-        return
 
     # Determine the mode (test or full)
     if TEST_MODE:

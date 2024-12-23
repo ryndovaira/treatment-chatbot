@@ -86,7 +86,7 @@ def log_patient_data(input_data, output_data, errors):
 
 
 def generate_patient_additional_data(
-    patient_records, model=OPENAI_MODEL, max_tokens=OPENAI_MAX_TOKENS, log_errors=False
+    patient_records, model=OPENAI_MODEL, max_tokens=OPENAI_MAX_TOKENS, log_errors=True
 ):
     """Generate structured patient data using OpenAI."""
     client = get_openai_client()

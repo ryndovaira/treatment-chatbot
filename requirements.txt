@@ -35,3 +35,4 @@ python-dotenv
 # OpenAI API
 openai
 tiktoken
+pydantic~=2.10.3

@@ -66,6 +66,7 @@ def log_patient_data(input_data, output_data, errors):
         error = errors[idx - 1] if idx - 1 < len(errors) else None
 
         if output_record:
+            logger.info(f"Output Record: {output_record}")
             logger.info("Output Summary:")
             logger.info(
                 f"- Current Medications: {[med.name for med in output_record.current_medications]}"

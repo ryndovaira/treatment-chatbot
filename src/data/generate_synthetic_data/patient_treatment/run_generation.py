@@ -17,7 +17,6 @@ OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 # Configuration
 TEST_MODE = True  # Set to True for testing or False for full data generation
 TEST_LIMIT = 5  # Number of records to process in test mode
-LOG_ERRORS = True  # Whether to log errors to a file
 
 
 def load_patient_data(csv_path: Path):
@@ -49,12 +48,6 @@ def main():
 
     print(f"Saving generated data to: {OUTPUT_FILE}")
     save_generated_data(generated_data, OUTPUT_FILE)
-
-    if errors:
-        print(f"Logging {len(errors)} errors to: {LOG_FILE_G}")
-        with open(LOG_FILE_G, "w") as log_file:
-            for error in errors:
-                log_file.write(error + "\n")
 
     print("Data generation completed!")
 

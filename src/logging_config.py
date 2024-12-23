@@ -14,14 +14,14 @@ class LogConfig:
 
     # Get the full path for the log file
     @classmethod
-    def get_log_file_path(cls):
+    def get_log_file_path(cls, file_name):
         """
         Returns the full path to the log file for the current application run.
         """
-        return LOG_DIR / f"log_{cls.TIMESTAMP}.log"
+        return LOG_DIR / f"{file_name}_{cls.TIMESTAMP}.log"
 
 
-def setup_logger(name=None):
+def setup_logger(name=None, file_name="log"):
     """
     Sets up a logger that writes logs to a UTF-8 encoded file and the console.
 
@@ -32,7 +32,7 @@ def setup_logger(name=None):
         logging.Logger: Configured logger instance.
     """
     # Get the log file path from LogConfig
-    log_file_path = LogConfig.get_log_file_path()
+    log_file_path = LogConfig.get_log_file_path(file_name=file_name)
 
     # Define the log format
     log_format = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"

@@ -7,6 +7,11 @@ from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import LOG_FILE_NAME
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
+from src.openai_utils.openai_token_count_and_cost import (
+    estimate_total_price,
+    calculate_price,
+    calculate_token_count,
+)
 
 logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
 
@@ -95,6 +100,10 @@ def generate_patient_additional_data(
     structured_data = []
     errors = []
 
+    total_input_tokens = 0
+    total_output_tokens = 0
+    total_cost = 0.0
+
     validate_model_support(model)
 
     # for record in patient_records:
@@ -118,6 +127,12 @@ def generate_patient_additional_data(
             },
         ]
         try:
+            token_estimation = estimate_total_price(messages, model=model)
+            total_input_tokens += token_estimation["input_tokens"]
+
+            logger.info(f"Input Tokens: {token_estimation['input_tokens']}")
+            logger.info(f"Input Cost: ${token_estimation['input_price']:.6f}")
+
             completion = client.beta.chat.completions.parse(
                 model=model,
                 messages=messages,
@@ -125,6 +140,18 @@ def generate_patient_additional_data(
                 max_tokens=max_tokens,
             )
             structured_data.append(completion.choices[0].message.parsed)
+
+            output_tokens = calculate_token_count(
+                [{"role": "assistant", "content": completion.choices[0].message.content}],
+                model,
+            )
+            logger.info(f"Output Tokens: {output_tokens}")
+            logger.info(f"Output Cost: ${calculate_price(output_tokens, model, input=False):.6f}")
+
+            total_output_tokens += output_tokens
+            output_cost = calculate_price(output_tokens, model, input=False)
+            total_cost += token_estimation["input_price"] + output_cost
+
         except Exception as e:
             error_msg = (
                 f"Error generating data for record {record.get('patient_id', 'unknown')}: {e}"
@@ -135,6 +162,10 @@ def generate_patient_additional_data(
             if log_errors:
                 with open("error_log.txt", "a") as log_file:
                     log_file.write(error_msg + "\n")
+
+    logger.info(f"Total Input Tokens: {total_input_tokens}")
+    logger.info(f"Total Output Tokens: {total_output_tokens}")
+    logger.info(f"Total Cost: ${total_cost:.6f}")
 
     log_patient_data(patient_records, structured_data, errors)
     return structured_data, errors

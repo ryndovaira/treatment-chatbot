@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from tqdm import tqdm
 
 from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
-from src.data.generate_synthetic_data.patient_treatment.config import LOG_FILE_NAME
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import LOG_FILE_NAME
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 

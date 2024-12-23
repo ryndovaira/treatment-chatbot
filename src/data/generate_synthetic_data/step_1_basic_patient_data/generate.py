@@ -7,7 +7,7 @@ from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_BASIC_PATIENT_DATA,
     RANDOM_SEED,
 )
-from src.data.generate_synthetic_data.patient_info.config import (
+from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
     NUM_PATIENTS,
     GENDERS,
     ETHNICITIES,

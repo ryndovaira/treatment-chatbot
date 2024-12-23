@@ -7,12 +7,12 @@ from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_TREATMENT_PATIENT_DATA,
     OUTPUT_FILE_BASIC_PATIENT_DATA,
 )
-from src.data.generate_synthetic_data.patient_treatment.config import (
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     TEST_LIMIT,
     TEST_MODE,
     LOG_FILE_NAME,
 )
-from src.data.generate_synthetic_data.patient_treatment.patient_data_generator import (
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_structured_data_generator import (
     process_patient_data,
 )
 from src.logging_config import setup_logger

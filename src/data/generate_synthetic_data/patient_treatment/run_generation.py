@@ -33,30 +33,6 @@ def save_generated_data(output_data, output_path: Path):
         json.dump(serializable_data, f, indent=4)
 
 
-def log_sample_outputs(data):
-    """Log sample outputs for quick feedback."""
-    if data:
-        print("Sample Generated Data:")
-        for idx, patient in enumerate(data[:3], 1):
-            print(f"  {idx}. Patient ID: {patient.get('patient_id', 'N/A')}")
-            if patient.get("current_medications"):
-                print(
-                    f"     Medications: {[med['name'] for med in patient['current_medications']]}"
-                )
-            if patient.get("lifestyle_recommendations"):
-                print(f"     Lifestyle: {patient['lifestyle_recommendations']}")
-    else:
-        print("No data generated to preview.")
-
-
-def validate_longitudinal_data(data):
-    """Validate longitudinal data consistency."""
-    print("Validating longitudinal data...")
-    for patient in data:
-        if "records" in patient and len(patient["records"]) > 1:
-            print(f"  Patient {patient['patient_id']} has {len(patient['records'])} records.")
-
-
 def main():
     print(f"Loading patient data from: {INPUT_FILE}")
     patient_data = load_patient_data(INPUT_FILE)
@@ -74,8 +50,6 @@ def main():
 
     print(f"Saving generated data to: {OUTPUT_FILE}")
     save_generated_data(generated_data, OUTPUT_FILE)
-    log_sample_outputs(generated_data)
-
     if TEST_MODE:
         validate_longitudinal_data(generated_data)
 

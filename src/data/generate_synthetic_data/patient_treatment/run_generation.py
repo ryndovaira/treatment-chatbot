@@ -33,7 +33,7 @@ def load_patient_data(csv_path: Path):
 def save_generated_data(output_data, output_path: Path):
     """Save generated data to a JSON file."""
     with open(output_path, "w") as f:
-        serializable_data = [data.dict() if data else None for data in output_data]
+        serializable_data = [data.dict() for data in output_data if data]
         json.dump(serializable_data, f, indent=4)
 
 

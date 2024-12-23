@@ -1,5 +1,5 @@
 # Core Libraries
-torch
+torch~=2.5.1
 torchvision
 torchaudio
 transformers
@@ -10,8 +10,8 @@ faiss-cpu
 langchain
 
 # Data Processing
-pandas
-numpy
+pandas~=2.2.3
+numpy~=2.2.0
 
 # API and Frontend
 fastapi
@@ -26,13 +26,13 @@ pytest
 black
 
 # Visualizations
-matplotlib
-seaborn
+matplotlib~=3.10.0
+seaborn~=0.13.2
 
 # Environment Configuration
-python-dotenv
+python-dotenv~=1.0.1
 
 # OpenAI API
-openai
-tiktoken
+openai~=1.58.1
+tiktoken~=0.8.0
 pydantic~=2.10.3

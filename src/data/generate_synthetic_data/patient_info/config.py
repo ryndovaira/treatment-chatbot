@@ -1,32 +1,9 @@
-from pathlib import Path
+from src.config import LOG_DIR
 
-# Path configuration
-DATA_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "private"
-OUTPUT_FILE = DATA_DIR / "basic_patient_data.csv"
-LOG_FILE_G = OUTPUT_FILE.parent / "generation_log.txt"
-
-# Additional directories for verification
-VERIFICATION_DIR = DATA_DIR / "verification_results"
-LOG_FILE_V = VERIFICATION_DIR / "synthetic_data_verificaion_log.txt"
-
-PLOTS_DIR = VERIFICATION_DIR / "plots"
-VERIFICATION_DIR.mkdir(parents=True, exist_ok=True)
-PLOTS_DIR.mkdir(parents=True, exist_ok=True)
-
-# Configuration
-NUM_PATIENTS = 750  # Number of synthetic patients to generate
-RANDOM_SEED = 42  # Seed for reproducibility
-
-# Gender categories
+NUM_PATIENTS = 900  # Number of synthetic patients to generate
 GENDERS = ["Male", "Female"]
-
-# Ethnicities
 ETHNICITIES = ["Asian", "Caucasian", "African American", "Hispanic", "Other"]
-
-# Pregnancy status options
 PREGNANCY_STATUS = ["Pregnant", "Not Pregnant", None]
-
-# Symptoms
 SYMPTOMS = [
     "Fatigue",
     "Frequent urination",
@@ -37,11 +14,7 @@ SYMPTOMS = [
     "Tingling or numbness in extremities",
     "Dry mouth",
 ]
-
-# Symptom severity levels
 SYMPTOM_SEVERITY = ["Mild", "Moderate", "Severe"]
-
-# Co-morbidities
 CO_MORBIDITIES = [
     "Hypertension",
     "Obesity",
@@ -49,8 +22,6 @@ CO_MORBIDITIES = [
     "Chronic kidney disease",
     "Peripheral neuropathy",
 ]
-
-# Lab result ranges (defaults)
 LAB_RANGES = {
     "hba1c_percent": (4.0, 6.5),  # % of hemoglobin with glucose
     "fasting_glucose_mg_dl": (70, 100),  # mg/dL
@@ -65,12 +36,18 @@ LAB_RANGES = {
 }
 
 
-# Additional validations for lab ranges
 def validate_lab_ranges():
     for key, (low, high) in LAB_RANGES.items():
         if low >= high:
             raise ValueError(f"Invalid range for {key}: ({low}, {high})")
 
+
+LOG_FILE_NAME = "step_1_basic_patient_data_generation"
+
+VERIFICATION_DIR = LOG_DIR / "step_1_basic_patient_data_verification_results"
+LOG_FILE_NAME_VERIFICATION = LOG_DIR / "step_1_basic_patient_data_verification"
+PLOTS_DIR = VERIFICATION_DIR / "plots"
+PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Run validations on import
 validate_lab_ranges()

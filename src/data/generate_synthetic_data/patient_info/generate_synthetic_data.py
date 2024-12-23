@@ -3,8 +3,12 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from src.data.generate_synthetic_data.synthetic_data_config import (
-    OUTPUT_FILE,
+from src.data.generate_synthetic_data.config import (
+    OUTPUT_FILE_BASIC_PATIENT_DATA,
+    RANDOM_SEED,
+)
+from src.data.generate_synthetic_data.patient_info.config import (
+    NUM_PATIENTS,
     GENDERS,
     ETHNICITIES,
     PREGNANCY_STATUS,
@@ -12,17 +16,17 @@ from src.data.generate_synthetic_data.synthetic_data_config import (
     SYMPTOM_SEVERITY,
     CO_MORBIDITIES,
     LAB_RANGES,
-    NUM_PATIENTS,
-    RANDOM_SEED,
-    LOG_FILE_G,
+    LOG_FILE_NAME,
 )
+from src.logging_config import setup_logger
 
-# Set random seed for reproducibility
+logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
+
 random.seed(RANDOM_SEED)
 
 
-# Generate Demographics
 def generate_demographics(patient_id):
+    logger.info(f"Generating demographics data for patient {patient_id}")
     age = random.randint(0, 100)
     gender = random.choice(GENDERS)
     ethnicity = random.choice(ETHNICITIES)
@@ -52,8 +56,8 @@ def generate_demographics(patient_id):
     }
 
 
-# Adjust lab result ranges based on demographics
 def adjust_lab_ranges(age, gender, pregnancy_status):
+    logger.info(f"Adjusting lab result ranges for demographics")
     adjusted_ranges = LAB_RANGES.copy()
     if pregnancy_status == "Pregnant":
         adjusted_ranges.update(
@@ -78,17 +82,19 @@ def adjust_lab_ranges(age, gender, pregnancy_status):
     return adjusted_ranges
 
 
-# Generate Lab Results
 def generate_lab_results(age, gender, pregnancy_status):
+    logger.info(f"Generating lab results")
     lab_ranges = adjust_lab_ranges(age, gender, pregnancy_status)
+    logger.info(f"Adjusted lab ranges: {lab_ranges}")
     return {key: round(random.uniform(*value), 1) for key, value in lab_ranges.items()}
 
 
-# Generate Symptoms and Co-Morbidities
 def generate_conditions():
+    logger.info(f"Generating symptoms and co-morbidities")
     symptoms = random.sample(SYMPTOMS, random.randint(1, 3))
     symptom_severity = random.choice(SYMPTOM_SEVERITY)
     co_morbidities = random.sample(CO_MORBIDITIES, random.randint(0, 2))
+    logger.info(f"Generated symptoms: {symptoms}, co-morbidities: {co_morbidities}")
     return {
         "symptoms": ", ".join(symptoms),
         "symptom_severity": symptom_severity,
@@ -96,8 +102,8 @@ def generate_conditions():
     }
 
 
-# Generate Longitudinal Data
 def generate_longitudinal_data(record_index):
+    logger.info(f"Generating longitudinal data for record {record_index}")
     record_date = datetime.today() - timedelta(days=random.randint(0, 365 * 5))
     return {
         "record_id": record_index,
@@ -105,8 +111,8 @@ def generate_longitudinal_data(record_index):
     }
 
 
-# Generate Records for Each Patient
 def generate_patient_data(patient_id):
+    logger.info(f"Generating data for patient {patient_id}")
     demographics = generate_demographics(patient_id)
     records = []
     num_records = random.randint(1, 5)
@@ -119,11 +125,12 @@ def generate_patient_data(patient_id):
         longitudinal_data = generate_longitudinal_data(record_index)
         records.append({**demographics, **lab_results, **conditions, **longitudinal_data})
 
+    logger.info(f"Generated {num_records} records for patient {patient_id}")
     return records
 
 
-# Generate dataset
 def generate_dataset():
+    logger.info(f"Start generating synthetic dataset with {NUM_PATIENTS} patients")
     all_records = []
     skipped = 0
 
@@ -133,17 +140,14 @@ def generate_dataset():
             all_records.extend(patient_records)
         except ValueError as e:
             skipped += 1
-            with open(LOG_FILE_G, "a") as log_file:
-                log_file.write(f"Skipping patient {patient_id}: {e}\n")
-            print(f"Skipping patient {patient_id}: {e}")
+            logger.warning(f"Skipping patient {patient_id}: {e}")
 
     df = pd.DataFrame(all_records)
-    df.to_csv(OUTPUT_FILE, index=False)
-    print(
-        f"Dataset saved to {OUTPUT_FILE}. {len(all_records)} records generated across {NUM_PATIENTS} patients, {skipped} patients skipped."
+    df.to_csv(OUTPUT_FILE_BASIC_PATIENT_DATA, index=False)
+    logger.info(
+        f"Dataset saved to {OUTPUT_FILE_BASIC_PATIENT_DATA}. {len(all_records)} records generated across {NUM_PATIENTS} patients, {skipped} patients skipped."
     )
 
 
-# Run the script
 if __name__ == "__main__":
     generate_dataset()

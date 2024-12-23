@@ -1,12 +1,14 @@
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
+from tqdm import tqdm
 
 from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
+from src.data.generate_synthetic_data.patient_treatment.config import LOG_FILE_NAME
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 
-logger = setup_logger(__name__)
+logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
 
 
 class Medication(BaseModel):
@@ -95,7 +97,8 @@ def generate_patient_additional_data(
 
     validate_model_support(model)
 
-    for record in patient_records:
+    # for record in patient_records:
+    for record in tqdm(patient_records, desc="Processing Patients", unit="patient"):
         messages = [
             {
                 "role": "system",

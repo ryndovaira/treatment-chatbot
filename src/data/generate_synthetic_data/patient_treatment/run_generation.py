@@ -3,20 +3,21 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.data.generate_synthetic_data.config import (
+    OUTPUT_FILE_TREATMENT_PATIENT_DATA,
+    OUTPUT_FILE_BASIC_PATIENT_DATA,
+)
+from src.data.generate_synthetic_data.patient_treatment.config import (
+    TEST_LIMIT,
+    TEST_MODE,
+    LOG_FILE_NAME,
+)
 from src.data.generate_synthetic_data.patient_treatment.patient_data_generator import (
     process_patient_data,
 )
-from src.data.generate_synthetic_data.synthetic_data_config import DATA_DIR
+from src.logging_config import setup_logger
 
-# Paths
-INPUT_FILE = DATA_DIR / "basic_patient_data.csv"
-LOG_FILE_G = INPUT_FILE.parent / "generation_log.txt"
-OUTPUT_FILE = DATA_DIR.parents[1] / "processed" / "patient_generated_data.json"
-OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-
-# Configuration
-TEST_MODE = True  # Set to True for testing or False for full data generation
-TEST_LIMIT = 5  # Number of records to process in test mode
+logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
 
 
 def load_patient_data(csv_path: Path):
@@ -24,32 +25,75 @@ def load_patient_data(csv_path: Path):
     return pd.read_csv(csv_path).to_dict(orient="records")
 
 
-def save_generated_data(output_data, output_path: Path):
-    """Save generated data to a JSON file."""
-    with open(output_path, "w") as f:
-        serializable_data = [data.model_dump() for data in output_data if data]
-        json.dump(serializable_data, f, indent=4)
+def save_generated_data_as_json(patient_data, generated_data, output_path: Path):
+    """Save generated data to a JSON file with patient_id added."""
+    logger.info(f"Saving generated data to: {output_path}")
+    serializable_data = []
+
+    for original, generated in zip(patient_data, generated_data):
+        if generated:
+            record = generated.model_dump()  # Convert structured data to JSON
+            record["patient_id"] = original.get("patient_id")  # Add patient_id
+            serializable_data.append(record)
+
+    try:
+        with open(output_path, "w") as f:
+            json.dump(serializable_data, f, indent=4)
+    except Exception as e:
+        logger.error(f"Failed to save JSON file: {e}")
+
+
+def save_generated_data_as_csv(patient_data, generated_data, output_path: Path):
+    """Save generated data to a CSV file with patient_id added."""
+    logger.info(f"Saving generated data to: {output_path}")
+    rows = []
+
+    for original, generated in zip(patient_data, generated_data):
+        if generated:
+            base_row = {
+                "patient_id": original.get("patient_id"),
+                "lifestyle_recommendations": "; ".join(generated.lifestyle_recommendations),
+            }
+            # Flatten current medications
+            for med in generated.current_medications:
+                med_row = base_row.copy()
+                med_row.update(
+                    {
+                        "medication_name": med.name,
+                        "dosage": med.dosage,
+                        "frequency": med.frequency,
+                        "duration": med.duration,
+                    }
+                )
+                rows.append(med_row)
+
+    pd.DataFrame(rows).to_csv(output_path, index=False)
 
 
 def main():
-    print(f"Loading patient data from: {INPUT_FILE}")
-    patient_data = load_patient_data(INPUT_FILE)
+    logger.info(f"Loading patient data from: {OUTPUT_FILE_BASIC_PATIENT_DATA}")
+    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
 
     if TEST_MODE:
-        print("Running in test mode...")
+        logger.info("Running in test mode...")
         generated_data, errors = process_patient_data(
             patient_data, test_mode=True, test_limit=TEST_LIMIT
         )
-        print("Test dataset generation completed!")
+        logger.info("Test dataset generation completed!")
     else:
-        print("Running full dataset generation...")
+        logger.info("Running full dataset generation...")
         generated_data, errors = process_patient_data(patient_data, test_mode=False)
-        print("Full dataset generation completed!")
+        logger.info("Full dataset generation completed!")
 
-    print(f"Saving generated data to: {OUTPUT_FILE}")
-    save_generated_data(generated_data, OUTPUT_FILE)
+    logger.info(f"Saving generated data")
+    save_generated_data_as_json(
+        patient_data, generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json")
+    )
+    save_generated_data_as_csv(
+        patient_data, generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".csv")
+    )
 
-    print("Data generation completed!")
+    logger.info("Data generation completed!")
 
 
 if __name__ == "__main__":

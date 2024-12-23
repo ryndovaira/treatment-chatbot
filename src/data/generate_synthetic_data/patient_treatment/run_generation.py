@@ -17,7 +17,6 @@ OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 # Configuration
 TEST_MODE = True  # Set to True for testing or False for full data generation
 TEST_LIMIT = 5  # Number of records to process in test mode
-OPENAI_MODEL = "gpt-4o"  # Replace with the configured model
 LOG_ERRORS = True  # Whether to log errors to a file
 
 
@@ -50,8 +49,6 @@ def main():
 
     print(f"Saving generated data to: {OUTPUT_FILE}")
     save_generated_data(generated_data, OUTPUT_FILE)
-    if TEST_MODE:
-        validate_longitudinal_data(generated_data)
 
     if errors:
         print(f"Logging {len(errors)} errors to: {LOG_FILE_G}")

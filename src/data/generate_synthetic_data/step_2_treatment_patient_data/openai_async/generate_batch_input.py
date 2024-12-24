@@ -6,8 +6,11 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers impo
     build_openai_messages,
     load_patient_data,
 )
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.send_batch import (
-    BATCH_FILE_PATH,
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
+    BATCH_INPUT_FILE,
+)
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
+    PatientData,
 )
 
 
@@ -30,6 +33,10 @@ def prepare_batch_file(patient_records, batch_file_path):
                     "messages": messages,
                     "max_tokens": OPENAI_MAX_TOKENS,
                     "temperature": OPENAI_TEMPERATURE,
+                    "response_format": {
+                        "type": "json_schema",
+                        "json_schema": PatientData.model_json_schema(),
+                    },
                 },
             }
             f.write(json.dumps(batch_request) + "\n")
@@ -37,8 +44,6 @@ def prepare_batch_file(patient_records, batch_file_path):
 
 
 if __name__ == "__main__":
-    # Read data from CSV
     patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
 
-    # Prepare the batch file
-    prepare_batch_file(patient_data, BATCH_FILE_PATH)
+    prepare_batch_file(patient_data, BATCH_INPUT_FILE)

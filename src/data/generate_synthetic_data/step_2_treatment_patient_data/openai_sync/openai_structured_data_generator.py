@@ -1,6 +1,6 @@
 from tqdm import tqdm
 
-from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
+from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS, OPENAI_TEMPERATURE
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
     build_openai_messages,
 )
@@ -66,8 +66,9 @@ def generate_patient_additional_data(
             completion = client.beta.chat.completions.parse(
                 model=model,
                 messages=messages,
-                response_format=PatientData,
                 max_tokens=max_tokens,
+                temperature=OPENAI_TEMPERATURE,
+                response_format=PatientData,
             )
             # Track tokens and costs
             token_usage = track_token_usage(messages, completion, model)

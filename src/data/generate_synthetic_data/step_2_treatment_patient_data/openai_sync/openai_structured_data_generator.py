@@ -1,6 +1,9 @@
 from tqdm import tqdm
 
 from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
+    build_openai_messages,
+)
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
     PatientData,
 )
@@ -58,24 +61,7 @@ def generate_patient_additional_data(
     total_cost = 0.0
 
     for record in tqdm(patient_records, desc="Processing Patients", unit="patient"):
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are a medical assistant tasked with generating structured patient data. "
-                    "Ensure the output adheres to the specified JSON schema."
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    "Generate additional data for this patient record. "
-                    "Include medications with details (name, dosage, frequency, duration), treatment history "
-                    "with reasons for medication changes, and lifestyle recommendations."
-                    f"Patient record: {record}"
-                ),
-            },
-        ]
+        messages = build_openai_messages(record)
         try:
             completion = client.beta.chat.completions.parse(
                 model=model,

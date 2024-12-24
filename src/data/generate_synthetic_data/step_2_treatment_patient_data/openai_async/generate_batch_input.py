@@ -32,21 +32,16 @@ def prepare_batch_file(patient_records, batch_file_path):
     """
     with open(batch_file_path, "w") as f:
         for idx, record in enumerate(patient_records):
+            messages = build_openai_messages(record)
             batch_request = {
                 "custom_id": f"request-{idx}",
                 "method": "POST",
                 "url": "/v1/chat/completions",
                 "body": {
-                    "model": "gpt-3.5-turbo",
-                    "messages": [
-                        {"role": "system", "content": "You are a helpful medical assistant."},
-                        {
-                            "role": "user",
-                            "content": f"Analyze the following patient record: {record}",
-                        },
-                    ],
-                    "max_tokens": 100,
-                    "temperature": 0.7,
+                    "model": OPENAI_MODEL,
+                    "messages": messages,
+                    "max_tokens": OPENAI_MAX_TOKENS,
+                    "temperature": OPENAI_TEMPERATURE,
                 },
             }
             f.write(json.dumps(batch_request) + "\n")

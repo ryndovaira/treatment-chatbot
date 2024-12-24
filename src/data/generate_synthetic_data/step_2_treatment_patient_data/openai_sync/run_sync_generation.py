@@ -10,14 +10,13 @@ from src.data.generate_synthetic_data.config import (
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     TEST_LIMIT,
     TEST_MODE,
-    LOG_FILE_NAME,
 )
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_structured_data_generator import (
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_sync.openai_structured_data_generator import (
     process_patient_data,
 )
 from src.logging_config import setup_logger
 
-logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
+logger = setup_logger(__name__, file_name="step_2_treatment_patient_data_generation_sync")
 
 
 def load_patient_data(csv_path: Path):

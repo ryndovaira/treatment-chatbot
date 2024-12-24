@@ -37,7 +37,7 @@ def submit_batch(batch_file_path):
     # Upload the batch file
     logger.info(f"Uploading batch file: {batch_file_path}")
     batch_input_file = client.files.create(file=open(batch_file_path, "rb"), purpose="batch")
-    batch_input_file_id = batch_input_file["id"]
+    batch_input_file_id = batch_input_file.id
     logger.info(f"Batch file uploaded with ID: {batch_input_file_id}")
 
     # Submit the batch job
@@ -47,7 +47,7 @@ def submit_batch(batch_file_path):
         endpoint="/v1/chat/completions",
         completion_window="24h",
     )
-    batch_id = batch_job["id"]
+    batch_id = batch_job.id
     logger.info(f"Batch submitted successfully. Batch ID: {batch_id}")
 
     # Save the hash and batch ID to the tracking file

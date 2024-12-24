@@ -17,6 +17,13 @@ logger = setup_logger(__name__)
 
 
 def save_results(batch_id, output_path: Path):
+    """
+    Retrieve batch results, parse them, and merge with original patient data.
+    Save the merged results in JSON and CSV formats.
+
+    :param batch_id: The ID of the batch to retrieve results for.
+    :param output_path: Path to save the merged results.
+    """
     logger.info(f"Retrieving results for batch ID: {batch_id}")
     results = retrieve_batch_results(batch_id)
 

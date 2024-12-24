@@ -1,26 +1,14 @@
-import csv
 import json
-from pathlib import Path
 
-# Define paths
-CSV_FILE_PATH = Path("patient_data.csv")  # Input data file
-BATCH_FILE_PATH = Path("batch_input.jsonl")  # Output batch file
-
-
-def read_csv_data(csv_file_path):
-    """
-    Read data from a CSV file.
-
-    :param csv_file_path: Path to the input CSV file.
-    :return: List of dictionaries representing the CSV rows.
-    """
-    if not csv_file_path.exists():
-        raise FileNotFoundError(f"Input CSV file {csv_file_path} does not exist.")
-
-    with open(csv_file_path, "r") as csv_file:
-        reader = csv.DictReader(csv_file)
-        data = [row for row in reader]
-    return data
+from src.config import OPENAI_MAX_TOKENS, OPENAI_MODEL, OPENAI_TEMPERATURE
+from src.data.generate_synthetic_data.config import OUTPUT_FILE_BASIC_PATIENT_DATA
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
+    build_openai_messages,
+    load_patient_data,
+)
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.send_batch import (
+    BATCH_FILE_PATH,
+)
 
 
 def prepare_batch_file(patient_records, batch_file_path):
@@ -50,7 +38,7 @@ def prepare_batch_file(patient_records, batch_file_path):
 
 if __name__ == "__main__":
     # Read data from CSV
-    patient_data = read_csv_data(CSV_FILE_PATH)
+    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
 
     # Prepare the batch file
     prepare_batch_file(patient_data, BATCH_FILE_PATH)

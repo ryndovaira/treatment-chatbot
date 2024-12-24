@@ -30,10 +30,6 @@ def prepare_batch_file(patient_records, batch_file_path):
                     "messages": messages,
                     "max_tokens": OPENAI_MAX_TOKENS,
                     "temperature": OPENAI_TEMPERATURE,
-                    "response_format": {
-                        "type": "json_schema",
-                        "json_schema": PatientData.model_json_schema(),
-                    },
                 },
             }
             f.write(json.dumps(batch_request) + "\n")

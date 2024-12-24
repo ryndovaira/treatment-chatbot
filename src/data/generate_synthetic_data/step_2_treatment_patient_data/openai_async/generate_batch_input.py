@@ -41,6 +41,7 @@ def prepare_batch_file(patient_records, batch_file_path):
 
 
 if __name__ == "__main__":
+    # Read data from CSV
     patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
 
     # Prepare the batch file

@@ -82,4 +82,7 @@ def save_generated_data_as_csv(patient_data, generated_data, output_path: Path):
 
 def load_patient_data(csv_path: Path):
     """Load patient data from a CSV file."""
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Input CSV file {csv_path} does not exist.")
+
     return pd.read_csv(csv_path).to_dict(orient="records")

@@ -6,7 +6,6 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 
-# Configure logger
 logger = setup_logger(__name__)
 
 

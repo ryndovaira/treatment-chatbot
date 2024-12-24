@@ -51,7 +51,7 @@ def submit_batch(batch_file_path):
     logger.info(f"Batch submitted successfully. Batch ID: {batch_id}")
 
     # Save the hash and batch ID to the tracking file
-    save_batch_hash(file_hash, batch_id, BATCH_TRACKING_FILE)
+    save_batch_hash(file_hash, batch_id, BATCH_TRACKING_FILE, batch_file_path)
     logger.info(f"Batch tracking updated in {BATCH_TRACKING_FILE}")
 
 

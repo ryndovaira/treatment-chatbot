@@ -36,8 +36,15 @@ def is_batch_already_submitted(file_hash: str, tracking_file: Path) -> bool:
     return file_hash in tracking_data.get("batch_hashes", {})
 
 
-def save_batch_hash(file_hash: str, batch_id: str, tracking_file: Path) -> None:
-    """Save a hash and its associated batch ID to the tracking file."""
+def save_batch_hash(file_hash: str, batch_id: str, tracking_file: Path, input_file: Path) -> None:
+    """
+    Save a hash and its associated batch ID to the tracking file, along with input/output file metadata.
+
+    :param file_hash: Hash of the batch file.
+    :param batch_id: ID of the batch job.
+    :param tracking_file: Path to the tracking file.
+    :param input_file: Path to the input batch file.
+    """
     tracking_data = {"batch_hashes": {}, "batches": {}}
     if tracking_file.exists():
         with open(tracking_file, "r") as f:
@@ -45,7 +52,11 @@ def save_batch_hash(file_hash: str, batch_id: str, tracking_file: Path) -> None:
 
     # Update tracking data
     tracking_data["batch_hashes"][file_hash] = batch_id
-    tracking_data["batches"][batch_id] = {"status": "submitted"}
+    tracking_data["batches"][batch_id] = {
+        "status": "submitted",
+        "input_file": str(input_file),
+        "output_file": None,
+    }
 
     with open(tracking_file, "w") as f:
         json.dump(tracking_data, f, indent=4)

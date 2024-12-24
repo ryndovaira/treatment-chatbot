@@ -39,7 +39,6 @@ def save_results(batch_id, output_path: Path):
 
 
 def main():
-    # Example batch ID and output path
     batch_id = "your-batch-id"
     save_results(batch_id, BATCH_OUTPUT_FILE)
 

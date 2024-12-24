@@ -34,7 +34,7 @@ def prepare_batch_file(patient_records, batch_file_path):
         for idx, record in enumerate(patient_records):
             messages = build_openai_messages(record)
             batch_request = {
-                "custom_id": f"request-{idx}",
+                "custom_id": f"patient-{record['patient_id']}-record-{record['record_id']}",
                 "method": "POST",
                 "url": "/v1/chat/completions",
                 "body": {

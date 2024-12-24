@@ -1,7 +1,6 @@
 from tqdm import tqdm
 
 from src.config import OPENAI_MODEL, OPENAI_MAX_TOKENS
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import LOG_FILE_NAME
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
     PatientData,
 )
@@ -13,7 +12,7 @@ from src.openai_utils.openai_token_count_and_cost import (
     calculate_token_count,
 )
 
-logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
+logger = setup_logger(__name__)
 
 
 def validate_model_support(model):

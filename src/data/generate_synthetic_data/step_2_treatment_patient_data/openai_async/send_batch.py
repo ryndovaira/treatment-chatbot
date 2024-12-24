@@ -1,16 +1,14 @@
 from pathlib import Path
 
 from batch_utils import compute_file_hash, is_batch_already_submitted, save_batch_hash
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
+    BATCH_TRACKING_FILE,
+    BATCH_INPUT_FILE,
+)
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 
-# Configure logger
 logger = setup_logger(__name__)
-
-BATCH_TRACKING_FILE = Path("batch_tracking.json")
-
-# Path to the batch input file
-BATCH_FILE_PATH = Path("batch_input.jsonl")
 
 
 def submit_batch(batch_file_path):
@@ -58,4 +56,4 @@ def submit_batch(batch_file_path):
 
 
 if __name__ == "__main__":
-    submit_batch(BATCH_FILE_PATH)
+    submit_batch(BATCH_INPUT_FILE)

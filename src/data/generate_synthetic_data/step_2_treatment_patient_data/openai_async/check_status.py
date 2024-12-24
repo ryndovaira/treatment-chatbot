@@ -1,13 +1,13 @@
 import json
-from pathlib import Path
 
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
+    BATCH_TRACKING_FILE,
+)
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 
 # Configure logger
 logger = setup_logger(__name__)
-
-BATCH_TRACKING_FILE = Path("batch_tracking.json")
 
 
 def load_tracking_data(tracking_file):

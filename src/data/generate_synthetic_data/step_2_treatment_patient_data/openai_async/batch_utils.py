@@ -1,4 +1,5 @@
 import hashlib
+import json
 from pathlib import Path
 
 from openai import OpenAI
@@ -24,9 +25,6 @@ def retrieve_batch_results(batch_id: str) -> str:
     result_file = client.batches.get_results(batch_id)
     logger.info(f"Results retrieved successfully for batch ID: {batch_id}")
     return result_file.text
-
-
-import json
 
 
 def is_batch_already_submitted(file_hash: str, tracking_file: Path) -> bool:

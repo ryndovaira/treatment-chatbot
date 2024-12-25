@@ -60,7 +60,9 @@ def generate_patient_additional_data(
     total_output_tokens = 0
     total_cost = 0.0
 
-    for record in tqdm(patient_records, desc="Processing Patients", unit="patient"):
+    for record_full in tqdm(patient_records, desc="Processing Patients", unit="patient"):
+        record = record_full.copy()
+        patient_id = record.pop("patient_id", None)
         messages = build_openai_messages(record)
         try:
             completion = client.beta.chat.completions.parse(
@@ -76,7 +78,8 @@ def generate_patient_additional_data(
             total_output_tokens += token_usage["output_tokens"]
             total_cost += token_usage["input_cost"] + token_usage["output_cost"]
 
-            structured_data.append(completion.choices[0].message.parsed)
+            output = completion.choices[0].message.parsed.model_dump()
+            structured_data.append(output | {"patient_id": patient_id})
         except Exception as e:
             error_msg = (
                 f"Error generating data for record {record.get('patient_id', 'unknown')}: {e}"
@@ -96,7 +99,6 @@ def generate_patient_additional_data(
 
 def process_patient_data(patient_records, test_mode=True, test_limit=5):
     """Process patient data in test or full mode."""
-    # Centralized model validation
     validate_model_support(OPENAI_MODEL)
 
     if test_mode:

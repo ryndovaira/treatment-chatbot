@@ -27,10 +27,12 @@ def prepare_batch_file(patient_records, batch_file_path):
     }
 
     with open(batch_file_path, "w") as f:
-        for idx, record in enumerate(patient_records):
+        for idx, record_full in enumerate(patient_records):
+            record = record_full.copy()
+            patient_id = record.pop("patient_id", None)
             messages = build_openai_messages(record)
             batch_request = {
-                "custom_id": f"patient-{record['patient_id']}-record-{record['record_id']}",
+                "custom_id": patient_id,
                 "method": "POST",
                 "url": "/v1/chat/completions",
                 "body": {

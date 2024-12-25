@@ -8,7 +8,6 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.config impor
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
     save_generated_data_as_json,
-    save_generated_data_as_csv,
     load_patient_data,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_sync.openai_structured_data_generator import (
@@ -36,10 +35,7 @@ def main():
 
     logger.info(f"Saving generated data")
     save_generated_data_as_json(
-        patient_data, generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json")
-    )
-    save_generated_data_as_csv(
-        patient_data, generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".csv")
+        generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json")
     )
 
     logger.info("Data generation completed!")

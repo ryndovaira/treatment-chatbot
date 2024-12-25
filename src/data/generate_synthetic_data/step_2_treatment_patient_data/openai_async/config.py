@@ -8,8 +8,8 @@ BATCH_ARTIFACTS_DIR = BASE_DIR / "artifacts"
 BATCH_ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # File Paths
+BATCH_FILE_EXT = ".jsonl"
 BATCH_INPUT_FILE = BATCH_ARTIFACTS_DIR / "batch_input.jsonl"  # Input JSONL file for Batch API
-BATCH_OUTPUT_FILE = (
-    BATCH_ARTIFACTS_DIR / "batch_results.jsonl"
-)  # Output JSONL file for Batch API results
+BATCH_OUTPUT_FILE = BATCH_ARTIFACTS_DIR / "batch_output"
+BATCH_ERROR_FILE = BATCH_ARTIFACTS_DIR / "batch_error"
 BATCH_TRACKING_FILE = BATCH_ARTIFACTS_DIR / "batch_tracking.json"  # Metadata tracking file

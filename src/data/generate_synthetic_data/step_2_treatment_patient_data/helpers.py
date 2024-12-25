@@ -24,37 +24,27 @@ def build_openai_messages(previous_patient_data_and_treatment: list, current_rec
         "role": "system",
         "content": (
             "You are a medical assistant tasked with generating structured patient data. "
-            "Ensure the output adheres to the specified JSON schema."
+            "Base your recommendations on the provided patient record and treatment history, ensuring clinical accuracy. "
+            "Follow the schema enforced by the system."
         ),
     }
 
-    # Historical context (if available)
-    if previous_patient_data_and_treatment:
-        user_message = {
-            "role": "user",
-            "content": (
-                "Generate data for this patient record. "
-                "Include medications with details (name, dosage, frequency, duration), treatment history "
-                "with reasons for medication changes, and lifestyle recommendations. "
-                "Patient treatment history up to this point: "
-                + json.dumps(previous_patient_data_and_treatment)
-                + "\n"
-                "Current patient record: " + json.dumps(current_record) + "\n"
-                "Ensure the output adheres to the specified JSON schema."
-            ),
-        }
-    else:
-        # No history available
-        user_message = {
-            "role": "user",
-            "content": (
-                "Generate data for this patient record. "
-                "Include medications with details (name, dosage, frequency, duration), treatment history "
-                "with reasons for medication changes, and lifestyle recommendations. "
-                "Current patient record: " + json.dumps(current_record) + "\n"
-                "Ensure the output adheres to the specified JSON schema."
-            ),
-        }
+    content_patient_history = (
+        f"Patient treatment history up to this point: {json.dumps(previous_patient_data_and_treatment)}"
+        if previous_patient_data_and_treatment
+        else ""
+    )
+    user_message = {
+        "role": "user",
+        "content": (
+            content_patient_history + "\n"
+            "Current patient record: " + json.dumps(current_record) + "\n"
+            "Generate data for this record based on the context."
+            "Include medications with full details (name, dosage, frequency, duration), treatment history "
+            "with logical reasons for medication changes, and concise lifestyle recommendations."
+            "Make sure date_started is based on the provided record date."
+        ),
+    }
 
     return [system_message, user_message]
 

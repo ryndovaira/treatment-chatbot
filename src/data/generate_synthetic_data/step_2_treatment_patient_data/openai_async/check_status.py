@@ -39,8 +39,7 @@ def check_all_batches(tracking_file):
         return
 
     for batch_id, batch_info in data["batches"].items():
-        logger.info(f"Batch ID: {batch_id}")
-        logger.info(f"  Status: {batch_info['status']}")
+        check_batch_status(batch_id, BATCH_TRACKING_FILE)
         logger.info(f"  Input File: {batch_info.get('input_file', 'Not available')}")
         logger.info(f"  Output File: {batch_info.get('output_file', 'Not available')}")
 
@@ -54,17 +53,15 @@ def check_batch_status(batch_id, tracking_file):
     """
     client = get_openai_client()
     try:
-        batch_status = client.batches.retrieve(batch_id)
+        batch = client.batches.retrieve(batch_id)
         logger.info(f"Batch ID: {batch_id}")
-        logger.info(f"Status: {batch_status['status']}")
-        logger.info(f"Completed Requests: {batch_status['request_counts']['completed']}")
-        logger.info(f"Failed Requests: {batch_status['request_counts']['failed']}")
-        logger.info(f"Total Requests: {batch_status['request_counts']['total']}")
+        batch_status = batch.status
+        logger.info(f"Status: {batch_status}")
 
         # Update the status in the tracking file
         data = load_tracking_data(tracking_file)
         if batch_id in data.get("batches", {}):
-            data["batches"][batch_id]["status"] = batch_status["status"]
+            data["batches"][batch_id]["status"] = batch_status
             with open(tracking_file, "w") as f:
                 json.dump(data, f, indent=4)
                 logger.info(f"Updated status for batch {batch_id} in {tracking_file}")

@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from batch_utils import compute_file_hash, is_batch_already_submitted, save_batch_hash
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
     BATCH_TRACKING_FILE,
     BATCH_INPUT_FILE,
 )
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
+from utils import compute_file_hash, is_batch_already_submitted, save_batch_hash
 
 logger = setup_logger(__name__)
 

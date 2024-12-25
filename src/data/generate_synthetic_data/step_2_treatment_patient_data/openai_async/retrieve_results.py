@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-from batch_utils import retrieve_batch_results
 from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_BASIC_PATIENT_DATA,
     OUTPUT_FILE_TREATMENT_PATIENT_DATA,
@@ -15,6 +14,7 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async
     BATCH_OUTPUT_FILE,
 )
 from src.logging_config import setup_logger
+from utils import retrieve_batch_results
 
 logger = setup_logger(__name__)
 

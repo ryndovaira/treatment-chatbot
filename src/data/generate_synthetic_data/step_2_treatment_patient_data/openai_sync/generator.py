@@ -60,8 +60,6 @@ def generate_patient_additional_data(grouped_patient_data):
 
     Args:
         grouped_patient_data (dict): Dictionary of patient_id to their list of records.
-        model (str): The OpenAI model to use.
-        max_tokens (int): Maximum tokens for the OpenAI response.
 
     Returns:
         tuple: List of structured patient data and list of error messages.

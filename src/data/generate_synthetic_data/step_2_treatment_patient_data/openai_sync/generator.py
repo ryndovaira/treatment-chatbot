@@ -3,17 +3,11 @@ from tqdm import tqdm
 from src.config import OPENAI_MODEL, OPENAI_TEMPERATURE, OPENAI_MAX_TOKENS
 from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_TREATMENT_PATIENT_DATA,
-    OUTPUT_FILE_BASIC_PATIENT_DATA,
-)
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
-    TEST_MODE,
-    TEST_LIMIT,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
     build_openai_messages,
     save_generated_data_as_json,
-    group_records_by_patient,
-    load_patient_data,
+    load_and_group_patient_data,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
     PatientData,
@@ -127,22 +121,19 @@ def process_patient_data(patient_records):
     return generate_patient_additional_data(patient_records)
 
 
-def main():
-    logger.info(f"Loading patient data from: {OUTPUT_FILE_BASIC_PATIENT_DATA}")
-    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
-    if TEST_MODE:
-        logger.info(f"Running in test mode, limiting records to {TEST_LIMIT}.")
-        patient_data = patient_data[: TEST_LIMIT + 1]
-    else:
-        logger.info("Running full dataset generation. Number of records: {len(patient_data)}")
-
-    grouped_records = group_records_by_patient(patient_data)
-
-    generated_data, errors = process_patient_data(grouped_records)
+def save_generated_data(generated_data):
     logger.info(f"Saving generated data")
     save_generated_data_as_json(
         generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json")
     )
+
+
+def main():
+    logger.info("Starting data generation...")
+
+    grouped_records = load_and_group_patient_data()
+    generated_data = process_patient_data(grouped_records)
+    save_generated_data(generated_data)
 
     logger.info("Data generation completed!")
 

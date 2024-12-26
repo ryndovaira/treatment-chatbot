@@ -4,6 +4,11 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.data.generate_synthetic_data.config import OUTPUT_FILE_BASIC_PATIENT_DATA
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
+    TEST_MODE,
+    TEST_LIMIT,
+)
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -90,3 +95,18 @@ def group_records_by_patient(patient_records):
     for record in patient_records:
         grouped_data[record["patient_id"]].append(record)
     return grouped_data
+
+
+def load_and_group_patient_data():
+    logger.info(f"Loading patient data from: {OUTPUT_FILE_BASIC_PATIENT_DATA}")
+    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
+    if TEST_MODE:
+        logger.info(f"Running in test mode, limiting records to {TEST_LIMIT}.")
+        patient_data = patient_data[: TEST_LIMIT + 1]
+    else:
+        logger.info("Running full dataset generation. Number of records: {len(patient_data)}")
+
+    logger.info("Grouping records by patient...")
+    grouped_records = group_records_by_patient(patient_data)
+    logger.info(f"Number of patients: {len(grouped_records)}")
+    return grouped_records

@@ -67,7 +67,7 @@ def generate_patient_additional_data(grouped_patient_data):
         tuple: List of structured patient data and list of error messages.
     """
     client = get_openai_client()
-    structured_data = []
+    generated_data = []
     total_input_tokens = 0
     total_output_tokens = 0
     total_cost = 0.0
@@ -98,12 +98,12 @@ def generate_patient_additional_data(grouped_patient_data):
                 output = completion.choices[0].message.parsed.model_dump()
                 patient_data_and_treatment = output | record
                 previous_patient_data_treatment.append(patient_data_and_treatment)
-                structured_data.append(
+                generated_data.append(
                     patient_data_and_treatment | {"patient_id": patient_id, "record_id": record_id}
                 )
             except Exception as e:
                 error_msg = f"Error generating data for patient_id {patient_id} and record_id {record_id}: {e}"
-                structured_data.append(None)
+                generated_data.append(None)
                 logger.error(error_msg)
                 with open("error_log.txt", "a") as log_file:
                     log_file.write(error_msg + "\n")
@@ -111,7 +111,7 @@ def generate_patient_additional_data(grouped_patient_data):
     logger.info(f"Total Input Tokens: {total_input_tokens}")
     logger.info(f"Total Output Tokens: {total_output_tokens}")
     logger.info(f"Total Cost: ${total_cost:.6f}")
-    return structured_data
+    return generated_data
 
 
 def process_patient_data(patient_records):

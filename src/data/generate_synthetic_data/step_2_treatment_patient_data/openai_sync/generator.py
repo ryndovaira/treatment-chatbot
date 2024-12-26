@@ -66,9 +66,6 @@ def generate_patient_additional_data(grouped_patient_data):
     """
     client = get_openai_client()
     generated_data = []
-    total_input_tokens = 0
-    total_output_tokens = 0
-    total_cost = 0.0
 
     for index, patient_records in tqdm(
         grouped_patient_data.items(), desc="Processing Patients", unit="patient"
@@ -88,11 +85,6 @@ def generate_patient_additional_data(grouped_patient_data):
                     response_format=PatientData,
                 )
 
-                token_usage = track_token_usage(messages, completion, OPENAI_MODEL)
-                total_input_tokens += token_usage["input_tokens"]
-                total_output_tokens += token_usage["output_tokens"]
-                total_cost += token_usage["input_cost"] + token_usage["output_cost"]
-
                 output = completion.choices[0].message.parsed.model_dump()
                 patient_data_and_treatment = output | record
                 previous_patient_data_treatment.append(patient_data_and_treatment)
@@ -106,9 +98,6 @@ def generate_patient_additional_data(grouped_patient_data):
                 with open("error_log.txt", "a") as log_file:
                     log_file.write(error_msg + "\n")
 
-    logger.info(f"Total Input Tokens: {total_input_tokens}")
-    logger.info(f"Total Output Tokens: {total_output_tokens}")
-    logger.info(f"Total Cost: ${total_cost:.6f}")
     return generated_data
 
 

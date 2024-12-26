@@ -74,7 +74,6 @@ def generate_patient_additional_data(grouped_patient_data):
     """
     client = get_openai_client()
     structured_data = []
-    errors = []
     total_input_tokens = 0
     total_output_tokens = 0
     total_cost = 0.0
@@ -110,7 +109,6 @@ def generate_patient_additional_data(grouped_patient_data):
                 )
             except Exception as e:
                 error_msg = f"Error generating data for patient_id {patient_id} and record_id {record_id}: {e}"
-                errors.append(error_msg)
                 structured_data.append(None)
                 logger.error(error_msg)
                 with open("error_log.txt", "a") as log_file:
@@ -119,7 +117,7 @@ def generate_patient_additional_data(grouped_patient_data):
     logger.info(f"Total Input Tokens: {total_input_tokens}")
     logger.info(f"Total Output Tokens: {total_output_tokens}")
     logger.info(f"Total Cost: ${total_cost:.6f}")
-    return structured_data, errors
+    return structured_data
 
 
 def process_patient_data(patient_records):

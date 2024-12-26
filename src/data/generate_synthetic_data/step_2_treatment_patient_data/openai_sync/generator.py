@@ -14,11 +14,6 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data
 )
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
-from src.openai_utils.openai_token_count_and_cost import (
-    estimate_total_price,
-    calculate_price,
-    calculate_token_count,
-)
 
 logger = setup_logger(__name__)
 
@@ -30,28 +25,6 @@ def validate_model_support(model):
             f"The configured model '{model}' is not supported for Structured Outputs. "
             f"Please use a model like 'gpt-4o', 'gpt-4o-mini', 'o1', or their supported variants."
         )
-
-
-def track_token_usage(messages, completion, model):
-    """Calculate input/output tokens and costs for a single API call."""
-    # Calculate input tokens and cost
-    token_estimation = estimate_total_price(messages, model=model)
-    input_tokens = token_estimation["input_tokens"]
-    input_cost = token_estimation["input_price"]
-
-    # Calculate output tokens and cost
-    output_tokens = calculate_token_count(
-        [{"role": "assistant", "content": completion.choices[0].message.content}],
-        model,
-    )
-    output_cost = calculate_price(output_tokens, model, input=False)
-
-    return {
-        "input_tokens": input_tokens,
-        "input_cost": input_cost,
-        "output_tokens": output_tokens,
-        "output_cost": output_cost,
-    }
 
 
 def generate_patient_additional_data(grouped_patient_data):

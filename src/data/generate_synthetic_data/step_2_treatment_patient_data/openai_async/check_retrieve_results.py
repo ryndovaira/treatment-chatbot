@@ -3,14 +3,14 @@ import json
 from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_TREATMENT_PATIENT_DATA,
 )
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
-    save_generated_data_as_json,
-)
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     BATCH_TRACKING_FILE,
     BATCH_ERROR_FILE,
     BATCH_FILE_EXT,
     BATCH_OUTPUT_FILE,
+)
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
+    save_generated_data_as_json,
 )
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client

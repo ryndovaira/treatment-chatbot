@@ -2,13 +2,13 @@ from generate_batch_input import prepare_batch_file
 from send_batch import submit_batch
 from src.data.generate_synthetic_data.config import OUTPUT_FILE_BASIC_PATIENT_DATA
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
+    BATCH_INPUT_FILE,
+)
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     TEST_MODE,
     TEST_LIMIT,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import load_patient_data
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
-    BATCH_INPUT_FILE,
-)
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

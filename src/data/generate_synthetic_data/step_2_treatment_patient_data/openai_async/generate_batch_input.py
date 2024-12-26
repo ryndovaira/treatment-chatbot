@@ -2,12 +2,12 @@ import json
 
 from src.config import OPENAI_MAX_TOKENS, OPENAI_MODEL, OPENAI_TEMPERATURE
 from src.data.generate_synthetic_data.config import OUTPUT_FILE_BASIC_PATIENT_DATA
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
+    BATCH_INPUT_FILE,
+)
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
     build_openai_messages,
     load_patient_data,
-)
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
-    BATCH_INPUT_FILE,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
     PatientData,

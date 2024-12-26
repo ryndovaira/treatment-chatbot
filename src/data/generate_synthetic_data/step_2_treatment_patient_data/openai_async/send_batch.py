@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.data.generate_synthetic_data.step_2_treatment_patient_data.openai_async.config import (
+from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     BATCH_TRACKING_FILE,
     BATCH_INPUT_FILE,
 )

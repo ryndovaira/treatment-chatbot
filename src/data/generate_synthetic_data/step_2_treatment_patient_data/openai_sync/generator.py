@@ -6,7 +6,7 @@ from src.data.generate_synthetic_data.config import (
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
     build_openai_messages,
-    save_generated_data_as_json,
+    save_data_as_json,
     load_and_group_patient_data,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
@@ -83,9 +83,7 @@ def process_patient_data(patient_records):
 
 def save_generated_data(generated_data):
     logger.info(f"Saving generated data")
-    save_generated_data_as_json(
-        generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json")
-    )
+    save_data_as_json(generated_data, OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_suffix(".json"))
 
 
 def main():

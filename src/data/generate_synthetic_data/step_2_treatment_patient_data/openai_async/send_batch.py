@@ -3,6 +3,7 @@ from pathlib import Path
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     BATCH_TRACKING_FILE,
     BATCH_INPUT_FILE,
+    PATIENT_RECORD_INDEX,
 )
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
@@ -51,9 +52,15 @@ def submit_batch(batch_file_path):
     logger.info(f"Batch submitted successfully. Batch ID: {batch_id}")
 
     # Save the hash and batch ID to the tracking file
-    save_batch_hash(file_hash, batch_id, BATCH_TRACKING_FILE, batch_file_path)
+    save_batch_hash(
+        file_hash, batch_id, BATCH_TRACKING_FILE, batch_file_path, record_index=PATIENT_RECORD_INDEX
+    )
     logger.info(f"Batch tracking updated in {BATCH_TRACKING_FILE}")
 
 
 if __name__ == "__main__":
-    submit_batch(BATCH_INPUT_FILE)
+    batch_file_path = BATCH_INPUT_FILE.with_stem(
+        f"{BATCH_INPUT_FILE.stem}_{PATIENT_RECORD_INDEX}"
+    ).with_suffix(".jsonl")
+    logger.info(f"Submitting batch file: {batch_file_path}")
+    submit_batch(batch_file_path)

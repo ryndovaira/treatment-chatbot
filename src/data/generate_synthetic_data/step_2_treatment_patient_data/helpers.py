@@ -66,11 +66,30 @@ def merge_patient_data(patient_data, generated_data):
             yield record
 
 
-def save_generated_data_as_json(serializable_data, output_path: Path):
-    """Save generated data to a JSON file."""
-    logger.info(f"Saving generated data to: {output_path}")
-    with open(output_path, "w") as f:
-        json.dump(serializable_data, f, indent=4)
+def save_data_as_json(data, data_name: str, path: Path, record_index: int):
+    path_with_ext = path.with_stem(f"{path.stem}_{record_index}").with_suffix(".json")
+
+    logger.info(f"Saving {data_name} file to {path_with_ext}")
+    logger.info(f"Number of records: {len(data)}")
+    logger.info(f"Data: {data}")
+
+    with open(path_with_ext, "w") as f:
+        json.dump(data, f, indent=4)
+
+    logger.info(f"{data_name.capitalize()} file saved to {path_with_ext}")
+    return path_with_ext
+
+
+def save_data_as_jsonl(data, data_name: str, path: Path, record_index: int):
+    path_with_ext = path.with_stem(f"{path.stem}_{record_index}").with_suffix(".jsonl")
+
+    logger.info(f"Saving {data_name} file to {path_with_ext}")
+
+    with open(path_with_ext, "w") as f:
+        f.write(data)
+
+    logger.info(f"{data_name.capitalize()} file saved to {path_with_ext}")
+    return path_with_ext
 
 
 def load_patient_data(csv_path: Path):
@@ -78,7 +97,19 @@ def load_patient_data(csv_path: Path):
     if not csv_path.exists():
         raise FileNotFoundError(f"Input CSV file {csv_path} does not exist.")
 
-    return pd.read_csv(csv_path).to_dict(orient="records")
+    data = pd.read_csv(csv_path)
+    data = data.fillna("None")
+    return data
+
+
+def load_json_data(path: Path):
+    """Load JSON data from a file."""
+    if not path.exists():
+        raise FileNotFoundError(f"Input JSON file {path} does not exist.")
+
+    with open(path, "r") as f:
+        data = json.load(f)
+    return data
 
 
 def group_records_by_patient(patient_records):
@@ -99,7 +130,7 @@ def group_records_by_patient(patient_records):
 
 def load_and_group_patient_data():
     logger.info(f"Loading patient data from: {OUTPUT_FILE_BASIC_PATIENT_DATA}")
-    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
+    patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA).to_dict(orient="records")
     if TEST_MODE:
         logger.info(f"Running in test mode, limiting records to {TEST_LIMIT}.")
         patient_data = patient_data[: TEST_LIMIT + 1]

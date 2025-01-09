@@ -65,6 +65,8 @@ def retrieve_batch_results(batch_id: str, save_path: Path) -> str:
 
 def is_batch_already_submitted(file_hash: str, tracking_file: Path) -> bool:
     """Check if a batch is already submitted based on the file hash."""
+    logger.info(f"Checking if batch with hash {file_hash} is already submitted...")
+    logger.info(f"Tracking file: {tracking_file}")
     if not tracking_file.exists():
         return False
     with open(tracking_file, "r") as f:
@@ -72,7 +74,9 @@ def is_batch_already_submitted(file_hash: str, tracking_file: Path) -> bool:
     return file_hash in tracking_data.get("batch_hashes", {})
 
 
-def save_batch_hash(file_hash: str, batch_id: str, tracking_file: Path, input_file: Path) -> None:
+def save_batch_hash(
+    file_hash: str, batch_id: str, tracking_file: Path, input_file: Path, record_index: int
+) -> None:
     """
     Save a hash and its associated batch ID to the tracking file, along with input/output file metadata.
 
@@ -92,6 +96,7 @@ def save_batch_hash(file_hash: str, batch_id: str, tracking_file: Path, input_fi
         "status": "submitted",
         "input_file": str(input_file),
         "output_file": None,
+        "record_index": record_index,
     }
 
     with open(tracking_file, "w") as f:

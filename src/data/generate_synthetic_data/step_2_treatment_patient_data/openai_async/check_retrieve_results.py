@@ -1,16 +1,12 @@
 import json
 
-from src.data.generate_synthetic_data.config import (
-    OUTPUT_FILE_TREATMENT_PATIENT_DATA,
-)
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.config import (
     BATCH_TRACKING_FILE,
-    BATCH_ERROR_FILE,
-    BATCH_FILE_EXT,
     BATCH_OUTPUT_FILE,
 )
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers import (
-    save_generated_data_as_json,
+    save_data_as_json,
+    save_data_as_jsonl,
 )
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
@@ -18,7 +14,7 @@ from src.openai_utils.openai_api_handler import get_openai_client
 logger = setup_logger(__name__)
 
 
-def load_tracking_data(tracking_file):
+def load_tracking_data(tracking_file) -> dict:
     """
     Load the tracking metadata file.
 
@@ -36,12 +32,11 @@ def load_tracking_data(tracking_file):
         return {}
 
 
-def save_file(content, path):
-    with open(path, "w") as f:
-        f.write(content)
-
-
 def usage_info(parsed_results):
+    """
+    Log the model and usage information for the parsed results.
+    :param parsed_results: Parsed JSON results.
+    """
     model = parsed_results[0]["response"]["body"]["model"]
     usage_prompt_tokens = sum(
         [result["response"]["body"]["usage"]["prompt_tokens"] for result in parsed_results]
@@ -59,26 +54,64 @@ def usage_info(parsed_results):
     )
 
 
-def save_output_as_json_and_csv(output, path):
+def save_output_text_as_json(output_text, path, record_index):
+    """
+    Save the output text as JSON.
+    :param output_text: Output text to save.
+    :param path: Path to save the output text.
+    :param record_index: Index of the record in the batch
+    """
     logger.info("Parsing batch results...")
-    parsed_results = [json.loads(line) for line in output.splitlines()]
+    parsed_results = [json.loads(line) for line in output_text.splitlines()]
     clean_parsed_results = [
         json.loads(result["response"]["body"]["choices"][0]["message"]["content"])
-        | {"patient_id": result["custom_id"]}
+        | {"patient_id": int(result["custom_id"].split("-")[1])}
         for result in parsed_results
     ]
 
     usage_info(parsed_results)
 
-    # logger.info("Loading original patient data...")
-    # original_patient_data = load_patient_data(OUTPUT_FILE_BASIC_PATIENT_DATA)
-
-    logger.info("Merging original and generated data...")
-    save_generated_data_as_json(clean_parsed_results, path.with_suffix(".json"))
-    logger.info(f"Results saved to {path.with_suffix('.json')} and {path.with_suffix('.csv')}")
+    save_data_as_json(
+        data=clean_parsed_results, data_name="output", path=path, record_index=record_index
+    )
 
 
-def retrieve_results(batch, batch_id, tracking_data):
+def retrieve_save_track_batch_file_content(
+    name, batch_id, file_id, tracking_data, record_index: int
+) -> str:
+    """
+    Retrieve the file content for a batch and save it to a file.
+    :param name: Name of the file.
+    :param batch_id: Batch ID.
+    :param file_id: File ID.
+    :param tracking_data: Tracking data.
+    :param record_index: Index of the record in the batch.
+    :return: The file content.
+    """
+    logger.info(f"Retrieving {name} file for batch {batch_id}...")
+    file = client.files.content(file_id)
+    file_text = file.text
+
+    file_path_with_ext = save_data_as_jsonl(
+        data=file_text, data_name=name, path=BATCH_OUTPUT_FILE, record_index=record_index
+    )
+
+    logger.info(f"Updating tracking file with {name} file path for batch {batch_id}")
+    update_tracking_file(
+        BATCH_TRACKING_FILE, tracking_data, batch_id, f"{name}_file", str(file_path_with_ext)
+    )
+
+    return file_text
+
+
+def retrieve_results(batch, batch_id, tracking_data, record_index: int):
+    """
+    Retrieve the results for a batch and save them to a file.
+    :param batch: Batch object.
+    :param batch_id: Batch ID.
+    :param tracking_data: Tracking data.
+    :param record_index: Index of the record in the batch.
+    """
     logger.info(f"Retrieving results for batch ID: {batch_id}")
     output_file_id = batch.output_file_id
     if not output_file_id:
@@ -86,41 +119,20 @@ def retrieve_results(batch, batch_id, tracking_data):
         if batch.error_file_id:
             logger.error(f"Batch ID {batch_id} encountered an error.")
             batch_error_file_id = batch.error_file_id
-            logger.info(f"Retrieving error file {batch_error_file_id} for batch {batch_id}...")
-            error_file = client.files.content(batch_error_file_id)
-            logger.error(f"Error file content: {error_file.text.strip()}")
-            error_file_path = BATCH_ERROR_FILE.with_stem(
-                f"{BATCH_ERROR_FILE.stem}_{batch_id}"
-            ).with_suffix(BATCH_FILE_EXT)
-            logger.info(f"Saving error file to {error_file_path}")
-            save_file(error_file.text, error_file_path)
-            logger.info(f"Error file saved to {error_file_path}")
-
-            logger.info(f"Updating tracking file with error file path for batch {batch_id}")
-            update_tracking_file(
-                BATCH_TRACKING_FILE, tracking_data, batch_id, "output_file", str(error_file_path)
+            retrieve_save_track_batch_file_content(
+                "error", batch_id, batch_error_file_id, tracking_data, record_index
             )
         else:
             logger.error(f"No output or error file found for batch ID {batch_id}.")
     else:
-        logger.info(f"Retrieving output file for batch {batch_id}...")
-        output_file = client.files.content(output_file_id)
-        output_file_path = BATCH_OUTPUT_FILE.with_stem(
-            f"{BATCH_OUTPUT_FILE.stem}_{batch_id}"
-        ).with_suffix(BATCH_FILE_EXT)
-        logger.info(f"Saving output file to {output_file_path}")
-        save_file(output_file.text, output_file_path)
-        logger.info(f"Output file saved to {output_file_path}")
 
-        logger.info(f"Updating tracking file with output file path for batch {batch_id}")
-        update_tracking_file(
-            BATCH_TRACKING_FILE, tracking_data, batch_id, "output_file", str(output_file_path)
+        output_text = retrieve_save_track_batch_file_content(
+            "output", batch_id, output_file_id, tracking_data, record_index
         )
 
-        results_path = OUTPUT_FILE_TREATMENT_PATIENT_DATA.with_stem(
-            f"{OUTPUT_FILE_TREATMENT_PATIENT_DATA.stem}_{batch_id}"
+        save_output_text_as_json(
+            output_text=output_text, path=BATCH_OUTPUT_FILE, record_index=record_index
         )
-        save_output_as_json_and_csv(output_file.text, results_path)
 
 
 def check_all_batches(client, tracking_file):
@@ -142,19 +154,31 @@ def check_all_batches(client, tracking_file):
             logger.info(f"Status: {batch_status}")
 
             input_file = batch_info.get("input_file", None)
-            output_file = batch_info.get("output_file", None)
             logger.info(f"Input File: {input_file}")
+
+            output_file = batch_info.get("output_file", None)
             logger.info(f"Output File: {output_file}")
 
             update_tracking_file(
                 BATCH_TRACKING_FILE, tracking_data, batch_id, "status", batch_status
             )
 
-            if (batch_status == "completed") and (output_file is None):
-                retrieve_results(batch, batch_id, tracking_data)
+            if (batch_status in ["completed", "failed", "expired", "cancelled"]) and (
+                output_file is None
+            ):
+                record_index = batch_info.get("record_index", None)
+                retrieve_results(batch, batch_id, tracking_data, record_index)
 
 
 def update_tracking_file(tracking_file, tracking_data, batch_id, field_name, field_value):
+    """
+    Update the tracking file with the new field value.
+    :param tracking_file: Path to the tracking file.
+    :param tracking_data: Parsed JSON data.
+    :param batch_id: The ID of the batch to update.
+    :param field_name: The field to update.
+    :param field_value: The new value for the field.
+    """
     with open(tracking_file, "w") as f:
         if tracking_data["batches"][batch_id][field_name] != field_value:
             tracking_data["batches"][batch_id][field_name] = field_value

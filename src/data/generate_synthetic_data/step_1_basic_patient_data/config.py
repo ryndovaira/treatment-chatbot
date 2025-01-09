@@ -1,6 +1,6 @@
 from src.config import LOG_DIR
 
-NUM_PATIENTS = 900  # Number of synthetic patients to generate
+NUM_PATIENTS = 100  # Number of synthetic patients to generate
 GENDERS = ["Male", "Female"]
 ETHNICITIES = ["Asian", "Caucasian", "African American", "Hispanic", "Other"]
 PREGNANCY_STATUS = ["Pregnant", "Not Pregnant", None]

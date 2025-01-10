@@ -1,4 +1,5 @@
 import json
+import pickle
 import unicodedata
 from pathlib import Path
 
@@ -14,6 +15,7 @@ logger = setup_logger(__name__)
 BASE_DIR = Path(__file__).resolve().parents[3]
 RAW_PUBLIC_DATA_DIR = BASE_DIR / "data" / "raw" / "public"
 PROCESSED_PUBLIC_DATA_FILE = BASE_DIR / "data" / "processed" / "public_data_processed.json"
+PROCESSED_PUBLIC_DATA_PICKLE = BASE_DIR / "data" / "processed" / "public_data_processed.pkl"
 METADATA_FILE = RAW_PUBLIC_DATA_DIR / "metadata.json"
 
 
@@ -62,15 +64,21 @@ def preprocess_public_data():
                     page=chunk.metadata["page"],
                 )
                 chunk.metadata["id"] = unique_id
-                all_documents.append(chunk.model_dump())  # Use `model_dump`
+                all_documents.append(chunk)
         except Exception as e:
             logger.error(f"Error splitting {pdf_file.name}: {e}")
 
-    # Save processed documents
+    # Save processed documents as JSON
     with PROCESSED_PUBLIC_DATA_FILE.open("w", encoding="utf-8") as f:
-        json.dump(all_documents, f, indent=4)
+        json.dump([doc.model_dump() for doc in all_documents], f, indent=4)
 
-    logger.info(f"Processed data saved to {PROCESSED_PUBLIC_DATA_FILE}.")
+    # Save processed documents as LangChain Documents using pickle
+    with PROCESSED_PUBLIC_DATA_PICKLE.open("wb") as f:
+        pickle.dump(all_documents, f)
+
+    logger.info(
+        f"Processed data saved to {PROCESSED_PUBLIC_DATA_FILE} and {PROCESSED_PUBLIC_DATA_PICKLE}."
+    )
 
 
 if __name__ == "__main__":

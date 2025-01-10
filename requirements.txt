@@ -8,10 +8,13 @@ bitsandbytes
 accelerate
 faiss-cpu
 langchain
+langchain-community~=0.3.14
+
 
 # Data Processing
 pandas~=2.2.3
 numpy~=2.2.0
+pypdf~=5.1.0
 
 # API and Frontend
 fastapi

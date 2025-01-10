@@ -1,4 +1,5 @@
 import json
+import unicodedata
 from pathlib import Path
 
 from langchain.text_splitter import CharacterTextSplitter
@@ -14,6 +15,11 @@ BASE_DIR = Path(__file__).resolve().parents[3]
 RAW_PUBLIC_DATA_DIR = BASE_DIR / "data" / "raw" / "public"
 PROCESSED_PUBLIC_DATA_FILE = BASE_DIR / "data" / "processed" / "public_data_processed.json"
 METADATA_FILE = RAW_PUBLIC_DATA_DIR / "metadata.json"
+
+
+def generate_unique_id(source: str, file_name: str, page: int) -> str:
+    """Generate a unique ID for each document chunk."""
+    return f"{source}_{file_name}_{page}"
 
 
 def preprocess_public_data():
@@ -40,12 +46,23 @@ def preprocess_public_data():
 
         # Split the document into chunks
         try:
-            chunks = splitter.split_documents(
-                documents
-            )  # Pass the list of `Document` objects directly
+            chunks = splitter.split_documents(documents)
             for chunk in chunks:
-                chunk.metadata.update(metadata[pdf_file.name])
-                all_documents.append(chunk.model_dump())
+                # Normalize text to handle special characters
+                normalized_text = unicodedata.normalize("NFKD", chunk.page_content)
+                chunk.page_content = normalized_text
+
+                # Add metadata and generate unique ID
+                file_metadata = metadata[pdf_file.name]
+                chunk.metadata.update(file_metadata)
+                chunk.metadata["page"] = chunk.metadata.get("page", 0)
+                unique_id = generate_unique_id(
+                    source=file_metadata["source"],
+                    file_name=file_metadata["file_name"],
+                    page=chunk.metadata["page"],
+                )
+                chunk.metadata["id"] = unique_id
+                all_documents.append(chunk.model_dump())  # Use `model_dump`
         except Exception as e:
             logger.error(f"Error splitting {pdf_file.name}: {e}")
 

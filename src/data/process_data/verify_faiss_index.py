@@ -1,8 +1,8 @@
 import pickle
 from pathlib import Path
 
-from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain_openai.embeddings import OpenAIEmbeddings
 
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger

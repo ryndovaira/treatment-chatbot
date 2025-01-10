@@ -9,6 +9,8 @@ accelerate
 faiss-cpu
 langchain
 langchain-community~=0.3.14
+langchain_openai~=0.3.0
+
 
 
 # Data Processing

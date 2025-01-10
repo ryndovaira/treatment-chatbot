@@ -3,6 +3,7 @@ from pathlib import Path
 
 from langchain_community.vectorstores import FAISS
 from langchain_openai.embeddings import OpenAIEmbeddings
+from tqdm import tqdm
 
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
@@ -55,7 +56,8 @@ def verify_faiss_against_pickle():
 
     # Step 5: Validate metadata alignment
     unmatched_ids = []
-    for doc in processed_data:
+    logger.info("Validating metadata alignment...")
+    for doc in tqdm(processed_data, desc="Verifying metadata alignment", unit="docs"):
         doc_id = doc.metadata["id"]
         results = vectorstore.similarity_search(doc.page_content, k=1)
         if not results or results[0].metadata["id"] != doc_id:

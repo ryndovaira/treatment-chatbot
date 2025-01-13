@@ -18,7 +18,7 @@ METADATA_PATH = BASE_DIR / "data" / "embeddings" / "public_faiss_index" / "index
 PROCESSED_PUBLIC_DATA_PICKLE = BASE_DIR / "data" / "processed" / "public_data_processed.pkl"
 
 # Debug flag
-DEBUG = True  # Set to True for debug mode
+DEBUG = False  # Set to True for debug mode
 
 
 def verify_faiss_against_pickle():

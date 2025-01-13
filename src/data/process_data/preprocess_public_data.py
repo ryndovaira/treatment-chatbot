@@ -9,10 +9,8 @@ from tqdm import tqdm
 
 from src.logging_config import setup_logger
 
-# Logger setup
 logger = setup_logger(__name__)
 
-# Paths
 BASE_DIR = Path(__file__).resolve().parents[3]
 RAW_PUBLIC_DATA_DIR = BASE_DIR / "data" / "raw" / "public"
 PROCESSED_PUBLIC_DATA_FILE = BASE_DIR / "data" / "processed" / "public_data_processed.json"
@@ -23,6 +21,24 @@ METADATA_FILE = RAW_PUBLIC_DATA_DIR / "metadata.json"
 def generate_unique_id(source: str, file_name: str, page: int) -> str:
     """Generate a unique ID for each document chunk."""
     return f"{source}_{file_name}_{page}"
+
+
+def save_processed_documents_as_json(all_documents, file_path):
+    with PROCESSED_PUBLIC_DATA_FILE.open("w", encoding="utf-8") as f:
+        json.dump([doc.model_dump() for doc in all_documents], f, indent=4)
+
+
+def save_processed_documents_as_pickle(all_documents, file_path):
+    with PROCESSED_PUBLIC_DATA_PICKLE.open("wb") as f:
+        pickle.dump(all_documents, f)
+
+
+def save_processed_documents(all_documents):
+    save_processed_documents_as_json(all_documents, PROCESSED_PUBLIC_DATA_FILE)
+    save_processed_documents_as_pickle(all_documents, PROCESSED_PUBLIC_DATA_PICKLE)
+    logger.info(
+        f"Processed data saved to {PROCESSED_PUBLIC_DATA_FILE} and {PROCESSED_PUBLIC_DATA_PICKLE}."
+    )
 
 
 def preprocess_public_data():
@@ -70,17 +86,7 @@ def preprocess_public_data():
         except Exception as e:
             logger.error(f"Error splitting {pdf_file.name}: {e}")
 
-    # Save processed documents as JSON
-    with PROCESSED_PUBLIC_DATA_FILE.open("w", encoding="utf-8") as f:
-        json.dump([doc.model_dump() for doc in all_documents], f, indent=4)
-
-    # Save processed documents as LangChain Documents using pickle
-    with PROCESSED_PUBLIC_DATA_PICKLE.open("wb") as f:
-        pickle.dump(all_documents, f)
-
-    logger.info(
-        f"Processed data saved to {PROCESSED_PUBLIC_DATA_FILE} and {PROCESSED_PUBLIC_DATA_PICKLE}."
-    )
+    save_processed_documents(all_documents)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ from pathlib import Path
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from tiktoken import encoding_for_model
+from tqdm import tqdm
 
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
@@ -78,8 +79,7 @@ def embed_public_data():
 
     # Process each batch
     vectorstore = None
-    for i, batch in enumerate(batches):
-        logger.info(f"Processing batch {i + 1}/{len(batches)} with {len(batch)} documents...")
+    for batch in tqdm(batches, desc="Processing batch", unit="batch"):
         if vectorstore is None:
             vectorstore = FAISS.from_documents(batch, embeddings)
         else:

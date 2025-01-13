@@ -5,6 +5,7 @@ from pathlib import Path
 
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
+from tqdm import tqdm
 
 from src.logging_config import setup_logger
 
@@ -32,8 +33,9 @@ def preprocess_public_data():
 
     all_documents = []
     splitter = CharacterTextSplitter(chunk_size=512, chunk_overlap=50)
-
-    for pdf_file in RAW_PUBLIC_DATA_DIR.glob("*.pdf"):
+    pdfs = list(RAW_PUBLIC_DATA_DIR.glob("*.pdf"))
+    logger.info(f"Found {len(list(pdfs))} PDF files in {RAW_PUBLIC_DATA_DIR}.")
+    for pdf_file in tqdm(pdfs, desc="Processing PDFs", unit="file"):
         if pdf_file.name not in metadata:
             logger.warning(f"No metadata for {pdf_file.name}, skipping.")
             continue

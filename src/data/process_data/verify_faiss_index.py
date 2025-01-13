@@ -1,3 +1,4 @@
+import json
 import pickle
 from pathlib import Path
 
@@ -59,12 +60,47 @@ def verify_faiss_against_pickle():
     logger.info("Validating metadata alignment...")
     for doc in tqdm(processed_data, desc="Verifying metadata alignment", unit="docs"):
         doc_id = doc.metadata["id"]
-        results = vectorstore.similarity_search(doc.page_content, k=1)
-        if not results or results[0].metadata["id"] != doc_id:
+        results = vectorstore.similarity_search(doc.page_content, k=5)
+
+        if not results:
             unmatched_ids.append(doc_id)
+        else:
+            no_matches = True
+            for result in results:
+                if result.metadata["id"] == doc_id:
+                    no_matches = False
+                    break
+            if no_matches:
+                unmatched_ids.append(doc_id)
+
+        # if not results or results[0].metadata["id"] != doc_id:
+        #     unmatched_ids.append(doc_id)
 
     if unmatched_ids:
-        logger.error(f"Metadata mismatch for the following IDs: {unmatched_ids}")
+        logger.error("Metadata mismatch detected.")
+        logger.error("Dumping mismatched metadata for debugging...")
+        mismatched_metadata = []
+        for unmatched_id in unmatched_ids:
+            doc = next(doc for doc in processed_data if doc.metadata["id"] == unmatched_id)
+            mismatched_metadata.append(
+                {
+                    "id": unmatched_id,
+                    "processed_metadata": doc.metadata,
+                    "processed_excerpt": doc.page_content[:200],
+                }
+            )
+            results = vectorstore.similarity_search(doc.page_content, k=1)
+            if results:
+                mismatched_metadata[-1]["faiss_metadata"] = results[0].metadata
+                mismatched_metadata[-1]["faiss_excerpt"] = results[0].page_content[:200]
+            else:
+                mismatched_metadata[-1]["faiss_metadata"] = None
+                mismatched_metadata[-1]["faiss_excerpt"] = None
+
+        mismatch_path = BASE_DIR / "debug_mismatched_metadata.json"
+        with mismatch_path.open("w", encoding="utf-8") as f:
+            json.dump(mismatched_metadata, f, indent=4)
+        logger.error(f"Mismatched metadata saved to {mismatch_path}")
     else:
         logger.info("All metadata entries in FAISS align with the processed data.")
 

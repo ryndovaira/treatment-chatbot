@@ -1,22 +1,19 @@
 import json
 import pickle
-from pathlib import Path
 
 from langchain_community.vectorstores import FAISS
 from langchain_openai.embeddings import OpenAIEmbeddings
 from tqdm import tqdm
 
 from src.config import OPENAI_API_KEY
+from src.data.process_data.config import (
+    PROCESSED_PUBLIC_DATA_PICKLE,
+    PUBLIC_FAISS_INDEX_PATH,
+    BASE_DIR,
+)
 from src.logging_config import setup_logger
 
-# Logger setup
 logger = setup_logger(__name__)
-
-# Paths
-BASE_DIR = Path(__file__).resolve().parents[3]
-FAISS_INDEX_PATH = BASE_DIR / "data" / "embeddings" / "public_faiss_index" / "index.faiss"
-METADATA_PATH = BASE_DIR / "data" / "embeddings" / "public_faiss_index" / "index.pkl"
-PROCESSED_PUBLIC_DATA_PICKLE = BASE_DIR / "data" / "processed" / "public_data_processed.pkl"
 
 
 def load_processed_data():
@@ -30,12 +27,14 @@ def load_processed_data():
 
 
 def load_faiss_index():
-    if not FAISS_INDEX_PATH.exists():
-        logger.error(f"FAISS index file not found at {FAISS_INDEX_PATH}")
+    if not PUBLIC_FAISS_INDEX_PATH.exists():
+        logger.error(f"FAISS index file not found at {PUBLIC_FAISS_INDEX_PATH}")
         return
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     vectorstore = FAISS.load_local(
-        str(FAISS_INDEX_PATH.parent), embeddings=embeddings, allow_dangerous_deserialization=True
+        str(PUBLIC_FAISS_INDEX_PATH.parent),
+        embeddings=embeddings,
+        allow_dangerous_deserialization=True,
     )
     logger.info(f"FAISS index loaded. Vector count: {vectorstore.index.ntotal}")
     return vectorstore

@@ -1,21 +1,20 @@
 import json
 import pickle
 import unicodedata
-from pathlib import Path
 
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from tqdm import tqdm
 
+from src.data.process_data.config import (
+    RAW_PUBLIC_DATA_DIR,
+    PROCESSED_PUBLIC_DATA_FILE,
+    PROCESSED_PUBLIC_DATA_PICKLE,
+    METADATA_FILE,
+)
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)
-
-BASE_DIR = Path(__file__).resolve().parents[3]
-RAW_PUBLIC_DATA_DIR = BASE_DIR / "data" / "raw" / "public"
-PROCESSED_PUBLIC_DATA_FILE = BASE_DIR / "data" / "processed" / "public_data_processed.json"
-PROCESSED_PUBLIC_DATA_PICKLE = BASE_DIR / "data" / "processed" / "public_data_processed.pkl"
-METADATA_FILE = RAW_PUBLIC_DATA_DIR / "metadata.json"
 
 
 def generate_unique_id(source: str, file_name: str, page: int) -> str:
@@ -41,11 +40,38 @@ def save_processed_documents(all_documents):
     )
 
 
-def preprocess_public_data():
-    """Parse PDFs, attach metadata, and save processed data."""
-    # Load metadata
+def load_metadata():
     with METADATA_FILE.open("r", encoding="utf-8") as f:
         metadata = {entry["file_name"]: entry for entry in json.load(f)}
+    logger.info(f"Loaded metadata for {len(metadata)} PDF files.")
+    return metadata
+
+
+def split_documents(splitter, documents, metadata, pdf_file):
+    all_docs = []
+    chunks = splitter.split_documents(documents)
+    for chunk in chunks:
+        # Normalize text to handle special characters
+        normalized_text = unicodedata.normalize("NFKD", chunk.page_content)
+        chunk.page_content = normalized_text
+
+        # Add metadata and generate unique ID
+        file_metadata = metadata[pdf_file.name]
+        chunk.metadata.update(file_metadata)
+        chunk.metadata["page"] = chunk.metadata.get("page", 0)
+        unique_id = generate_unique_id(
+            source=file_metadata["source"],
+            file_name=file_metadata["file_name"],
+            page=chunk.metadata["page"],
+        )
+        chunk.metadata["id"] = unique_id
+        all_docs.append(chunk)
+    return all_docs
+
+
+def preprocess_public_data():
+    """Parse PDFs, attach metadata, and save processed data."""
+    metadata = load_metadata()
 
     all_documents = []
     splitter = CharacterTextSplitter(chunk_size=512, chunk_overlap=50)
@@ -64,25 +90,8 @@ def preprocess_public_data():
             logger.error(f"Failed to load {pdf_file.name}: {e}")
             continue
 
-        # Split the document into chunks
         try:
-            chunks = splitter.split_documents(documents)
-            for chunk in chunks:
-                # Normalize text to handle special characters
-                normalized_text = unicodedata.normalize("NFKD", chunk.page_content)
-                chunk.page_content = normalized_text
-
-                # Add metadata and generate unique ID
-                file_metadata = metadata[pdf_file.name]
-                chunk.metadata.update(file_metadata)
-                chunk.metadata["page"] = chunk.metadata.get("page", 0)
-                unique_id = generate_unique_id(
-                    source=file_metadata["source"],
-                    file_name=file_metadata["file_name"],
-                    page=chunk.metadata["page"],
-                )
-                chunk.metadata["id"] = unique_id
-                all_documents.append(chunk)
+            all_documents.extend(split_documents(splitter, documents, metadata, pdf_file))
         except Exception as e:
             logger.error(f"Error splitting {pdf_file.name}: {e}")
 

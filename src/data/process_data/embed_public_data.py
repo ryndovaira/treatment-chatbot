@@ -6,10 +6,10 @@ from tiktoken import encoding_for_model
 from tqdm import tqdm
 
 from config import (
-    MODEL_NAME,
+    PUBLIC_EMBEDDING_MODEL,
     PROCESSED_PUBLIC_DATA_PICKLE,
     DEBUG,
-    TOKEN_LIMIT_PER_MINUTE,
+    PUBLIC_EMBEDDING_MODEL_TOKEN_LIMIT_PER_MINUTE,
     PUBLIC_FAISS_DIR,
 )
 from src.config import OPENAI_API_KEY
@@ -18,7 +18,7 @@ from src.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 
-def calculate_token_count(text: str, model: str = MODEL_NAME) -> int:
+def calculate_token_count(text: str, model: str = PUBLIC_EMBEDDING_MODEL) -> int:
     """Calculate the token count of a given text using the specified model's tokenizer."""
     tokenizer = encoding_for_model(model)
     return len(tokenizer.encode(text))
@@ -89,7 +89,7 @@ def embed_public_data():
 
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-    batches = batch_documents(documents, TOKEN_LIMIT_PER_MINUTE)
+    batches = batch_documents(documents, PUBLIC_EMBEDDING_MODEL_TOKEN_LIMIT_PER_MINUTE)
 
     vectorstore = process_batches(batches, embeddings)
 

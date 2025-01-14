@@ -22,5 +22,7 @@ PRIVATE_FAISS_DIR.mkdir(parents=True, exist_ok=True)
 
 MODEL_NAME = "text-embedding-ada-002"
 TOKEN_LIMIT_PER_MINUTE = 950_000
+PUBLIC_EMBEDDING_MODEL = "text-embedding-ada-002"
+PUBLIC_EMBEDDING_MODEL_TOKEN_LIMIT_PER_MINUTE = 950_000
 
 DEBUG = True

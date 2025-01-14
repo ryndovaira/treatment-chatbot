@@ -5,14 +5,14 @@ from langchain_community.vectorstores import FAISS
 from tiktoken import encoding_for_model
 from tqdm import tqdm
 
-from src.config import OPENAI_API_KEY
-from src.data.process_data.config import (
+from config import (
     MODEL_NAME,
     PROCESSED_PUBLIC_DATA_PICKLE,
     DEBUG,
     TOKEN_LIMIT_PER_MINUTE,
     PUBLIC_FAISS_DIR,
 )
+from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

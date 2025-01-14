@@ -5,12 +5,12 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai.embeddings import OpenAIEmbeddings
 from tqdm import tqdm
 
-from src.config import OPENAI_API_KEY
-from src.data.process_data.config import (
+from config import (
     PROCESSED_PUBLIC_DATA_PICKLE,
     PUBLIC_FAISS_INDEX_PATH,
     BASE_DIR,
 )
+from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

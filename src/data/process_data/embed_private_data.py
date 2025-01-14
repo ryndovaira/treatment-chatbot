@@ -4,8 +4,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai.embeddings import OpenAIEmbeddings
 from tqdm import tqdm
 
+from config import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
 from src.config import OPENAI_API_KEY
-from src.data.process_data.config import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

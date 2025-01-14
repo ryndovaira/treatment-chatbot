@@ -7,3 +7,5 @@ data/processed/*.json filter=lfs diff=lfs merge=lfs -text
 data/processed/*.pkl filter=lfs diff=lfs merge=lfs -text
 data/embeddings/public_faiss_index/*.faiss filter=lfs diff=lfs merge=lfs -text
 data/embeddings/public_faiss_index/*.pkl filter=lfs diff=lfs merge=lfs -text
+data/embeddings/private_faiss_index/*.pkl filter=lfs diff=lfs merge=lfs -text
+data/embeddings/private_faiss_index/*.faiss filter=lfs diff=lfs merge=lfs -text

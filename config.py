@@ -20,9 +20,11 @@ PRIVATE_DATA_JSON = BASE_DIR / "data" / "raw" / "private" / "patient_data_and_tr
 PRIVATE_FAISS_DIR = BASE_DIR / "data" / "embeddings" / "private_faiss_index"
 PRIVATE_FAISS_DIR.mkdir(parents=True, exist_ok=True)
 
-MODEL_NAME = "text-embedding-ada-002"
-TOKEN_LIMIT_PER_MINUTE = 950_000
 PUBLIC_EMBEDDING_MODEL = "text-embedding-ada-002"
 PUBLIC_EMBEDDING_MODEL_TOKEN_LIMIT_PER_MINUTE = 950_000
+
+
+PRIVATE_EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
+
 
 DEBUG = True

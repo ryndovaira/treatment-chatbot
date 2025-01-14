@@ -1,11 +1,11 @@
 import json
 
 from langchain_community.vectorstores import FAISS
-from langchain_openai.embeddings import OpenAIEmbeddings
+from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from config import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
-from src.config import OPENAI_API_KEY
+from src.config import PRIVATE_EMBEDDING_MODEL
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -54,11 +54,11 @@ def load_private_data():
 
 
 def generate_embeddings(documents):
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-    logger.info("Generating embeddings and creating FAISS index...")
+    model = SentenceTransformer(PRIVATE_EMBEDDING_MODEL)
+    logger.info(f"Generating embeddings using model: {PRIVATE_EMBEDDING_MODEL}")
     vectorstore = FAISS.from_texts(
         [doc["text"] for doc in tqdm(documents, desc="Embedding texts")],
-        embedding=embeddings,
+        embedding=lambda texts: model.encode(texts, batch_size=32, show_progress_bar=True),
         metadatas=[doc["metadata"] for doc in documents],
     )
     return vectorstore

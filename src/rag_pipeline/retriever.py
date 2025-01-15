@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -15,21 +15,22 @@ def load_faiss_index(index_dir, embeddings):
     Load a FAISS index from the specified directory using the given embeddings.
 
     Args:
-        index_dir (str): Path to the directory containing the FAISS index.
+        index_dir (Path): Path to the directory containing the FAISS index.
         embeddings (Embeddings): The embedding model used to create the FAISS index.
 
     Returns:
         FAISS: The loaded FAISS retriever.
     """
-    if not os.path.exists(index_dir):
+    index_path = Path(index_dir)
+    if not index_path.exists():
         logger.error(f"FAISS index directory not found: {index_dir}")
         raise FileNotFoundError(f"Directory {index_dir} does not exist.")
 
-    logger.info(f"Loading FAISS index from {index_dir}...")
-    return FAISS.load_local(index_dir, embeddings, allow_dangerous_deserialization=True)
+    logger.info(f"Loading FAISS index from {index_path}...")
+    return FAISS.load_local(str(index_path), embeddings, allow_dangerous_deserialization=True)
 
 
-def retrieve_context(query, public_retriever, private_retriever, top_n=5):
+def retrieve_context(query, public_retriever, private_retriever, top_n=RETRIEVAL_TOP_N):
     """
     Retrieve context from public and private FAISS retrievers.
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     patient_info = {
         "age": 23,
         "gender": "Female",
-        "ethnicity": "Causasian",
+        "ethnicity": "Caucasian",
         "weight_kg": 120,
         "height_cm": 160,
         "hba1c_percent": 4.5,
@@ -79,7 +80,7 @@ if __name__ == "__main__":
         "triglycerides_mg_dl": 57.4,
     }
     query = f"{patient_info}\nWhat is the recommended treatment for Type 2 diabetes?"
-    results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
+    results = retrieve_context(query, public_retriever, private_retriever)
     print("Public Results:")
     for result in results["public_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
@@ -88,7 +89,8 @@ if __name__ == "__main__":
     for result in results["private_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
 
-    with open("full_answer.txt", "w") as f:
+    output_file = Path("full_answer.txt")
+    with output_file.open("w", encoding="utf-8") as f:
         f.write(f"Question: {query}\n\n")
         f.write("Public Results:\n")
         for result in results["public_results"]:
@@ -96,3 +98,5 @@ if __name__ == "__main__":
         f.write("\nPrivate Results:\n")
         for result in results["private_results"]:
             f.write(f"- {result['text']} (Source: {result['metadata']})\n")
+
+    logger.info(f"Results saved to {output_file}")

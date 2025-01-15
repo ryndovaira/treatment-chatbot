@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from src.config import OPENAI_MODEL
+
 BASE_DIR = Path(__file__).resolve().parent
 
 RAW_PUBLIC_DATA_DIR = BASE_DIR / "data" / "raw" / "public"
@@ -29,3 +31,6 @@ PRIVATE_EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
 RETRIEVAL_TOP_N = 5
 
 DEBUG = True
+
+
+RAG_MODEL_NAME = OPENAI_MODEL

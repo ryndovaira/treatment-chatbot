@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Dict, List
 
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -29,7 +30,9 @@ def load_faiss_index(index_dir: Path, embeddings: OpenAIEmbeddings) -> FAISS:
     return FAISS.load_local(str(index_dir), embeddings, allow_dangerous_deserialization=True)
 
 
-def retrieve_context(query: str, public_retriever: FAISS, private_retriever: FAISS, top_n):
+def retrieve_context(
+    query: str, public_retriever: FAISS, private_retriever: FAISS, top_n: int
+) -> Dict[str, List[Dict[str, str]]]:
     """
     Retrieve context from public and private FAISS retrievers.
 
@@ -40,7 +43,7 @@ def retrieve_context(query: str, public_retriever: FAISS, private_retriever: FAI
         top_n (int): Number of top results to retrieve.
 
     Returns:
-        dict: Retrieved contexts with metadata from both retrievers.
+        Dict[str, List[Dict[str, str]]]: Retrieved contexts with metadata from both retrievers.
     """
     logger.info(f"Retrieving context for query: {query}")
 
@@ -58,6 +61,10 @@ def retrieve_context(query: str, public_retriever: FAISS, private_retriever: FAI
             {"text": res.page_content, "metadata": res.metadata} for res in private_results
         ],
     }
+
+
+def dict_to_human_readable(d):
+    return "\n".join(f"{key}: {value}" for key, value in d.items())
 
 
 if __name__ == "__main__":
@@ -78,7 +85,7 @@ if __name__ == "__main__":
         "cholesterol_mg_dl": 160.8,
         "triglycerides_mg_dl": 57.4,
     }
-    query = f"{patient_info}\nWhat is the recommended treatment for Type 2 diabetes?"
+    query = f"{dict_to_human_readable(patient_info)}\nWhat is the recommended treatment for Type 2 diabetes?"
     results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
     print("Public Results:")
     for result in results["public_results"]:

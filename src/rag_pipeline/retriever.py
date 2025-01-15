@@ -1,18 +1,22 @@
 import os
 
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
+from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RETRIEVAL_TOP_N
+from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
 
-def load_faiss_index(index_dir):
+def load_faiss_index(index_dir, embeddings):
     """
-    Load a FAISS index from the specified directory.
+    Load a FAISS index from the specified directory using the given embeddings.
 
     Args:
         index_dir (str): Path to the directory containing the FAISS index.
+        embeddings (Embeddings): The embedding model used to create the FAISS index.
 
     Returns:
         FAISS: The loaded FAISS retriever.
@@ -22,7 +26,7 @@ def load_faiss_index(index_dir):
         raise FileNotFoundError(f"Directory {index_dir} does not exist.")
 
     logger.info(f"Loading FAISS index from {index_dir}...")
-    return FAISS.load_local(index_dir)
+    return FAISS.load_local(index_dir, embeddings, allow_dangerous_deserialization=True)
 
 
 def retrieve_context(query, public_retriever, private_retriever, top_n=5):
@@ -57,17 +61,25 @@ def retrieve_context(query, public_retriever, private_retriever, top_n=5):
 
 
 if __name__ == "__main__":
-    # Configuration paths for the indexes
-    PUBLIC_FAISS_DIR = "data/embeddings/public_faiss_index"
-    PRIVATE_FAISS_DIR = "data/embeddings/private_faiss_index"
+    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
     # Load the indexes
-    public_retriever = load_faiss_index(PUBLIC_FAISS_DIR)
-    private_retriever = load_faiss_index(PRIVATE_FAISS_DIR)
+    public_retriever = load_faiss_index(PUBLIC_FAISS_DIR, embeddings)
+    private_retriever = load_faiss_index(PRIVATE_FAISS_DIR, embeddings)
 
     # Example usage
-    query = "What is the recommended treatment for Type 2 diabetes?"
-    results = retrieve_context(query, public_retriever, private_retriever)
+    patient_info = {
+        "age": 23,
+        "gender": "Female",
+        "ethnicity": "Causasian",
+        "weight_kg": 120,
+        "height_cm": 160,
+        "hba1c_percent": 4.5,
+        "cholesterol_mg_dl": 160.8,
+        "triglycerides_mg_dl": 57.4,
+    }
+    query = f"{patient_info}\nWhat is the recommended treatment for Type 2 diabetes?"
+    results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
     print("Public Results:")
     for result in results["public_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
@@ -75,3 +87,12 @@ if __name__ == "__main__":
     print("\nPrivate Results:")
     for result in results["private_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
+
+    with open("full_answer.txt", "w") as f:
+        f.write(f"Question: {query}\n\n")
+        f.write("Public Results:\n")
+        for result in results["public_results"]:
+            f.write(f"- {result['text']} (Source: {result['metadata']})\n")
+        f.write("\nPrivate Results:\n")
+        for result in results["private_results"]:
+            f.write(f"- {result['text']} (Source: {result['metadata']})\n")

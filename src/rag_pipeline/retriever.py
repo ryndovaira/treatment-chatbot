@@ -10,7 +10,7 @@ from src.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 
-def load_faiss_index(index_dir, embeddings):
+def load_faiss_index(index_dir: Path, embeddings: OpenAIEmbeddings) -> FAISS:
     """
     Load a FAISS index from the specified directory using the given embeddings.
 
@@ -21,16 +21,15 @@ def load_faiss_index(index_dir, embeddings):
     Returns:
         FAISS: The loaded FAISS retriever.
     """
-    index_path = Path(index_dir)
-    if not index_path.exists():
+    if not index_dir.exists():
         logger.error(f"FAISS index directory not found: {index_dir}")
         raise FileNotFoundError(f"Directory {index_dir} does not exist.")
 
-    logger.info(f"Loading FAISS index from {index_path}...")
-    return FAISS.load_local(str(index_path), embeddings, allow_dangerous_deserialization=True)
+    logger.info(f"Loading FAISS index from {index_dir}...")
+    return FAISS.load_local(str(index_dir), embeddings, allow_dangerous_deserialization=True)
 
 
-def retrieve_context(query, public_retriever, private_retriever, top_n=RETRIEVAL_TOP_N):
+def retrieve_context(query: str, public_retriever: FAISS, private_retriever: FAISS, top_n):
     """
     Retrieve context from public and private FAISS retrievers.
 
@@ -80,7 +79,7 @@ if __name__ == "__main__":
         "triglycerides_mg_dl": 57.4,
     }
     query = f"{patient_info}\nWhat is the recommended treatment for Type 2 diabetes?"
-    results = retrieve_context(query, public_retriever, private_retriever)
+    results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
     print("Public Results:")
     for result in results["public_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
@@ -89,8 +88,8 @@ if __name__ == "__main__":
     for result in results["private_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
 
-    output_file = Path("full_answer.txt")
-    with output_file.open("w", encoding="utf-8") as f:
+    output_path = Path("full_answer.txt")
+    with output_path.open("w", encoding="utf-8") as f:
         f.write(f"Question: {query}\n\n")
         f.write("Public Results:\n")
         for result in results["public_results"]:
@@ -99,4 +98,4 @@ if __name__ == "__main__":
         for result in results["private_results"]:
             f.write(f"- {result['text']} (Source: {result['metadata']})\n")
 
-    logger.info(f"Results saved to {output_file}")
+    logger.info(f"Results saved to {output_path}")

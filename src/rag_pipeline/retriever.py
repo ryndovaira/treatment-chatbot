@@ -1,10 +1,12 @@
+import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Any, List
 
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
 from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RETRIEVAL_TOP_N
+from query_generalizer import generalize_query
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
@@ -17,7 +19,7 @@ def load_faiss_index(index_dir: Path, embeddings: OpenAIEmbeddings) -> FAISS:
 
     Args:
         index_dir (Path): Path to the directory containing the FAISS index.
-        embeddings (Embeddings): The embedding model used to create the FAISS index.
+        embeddings (OpenAIEmbeddings): The embedding model used to create the FAISS index.
 
     Returns:
         FAISS: The loaded FAISS retriever.
@@ -32,18 +34,18 @@ def load_faiss_index(index_dir: Path, embeddings: OpenAIEmbeddings) -> FAISS:
 
 def retrieve_context(
     query: str, public_retriever: FAISS, private_retriever: FAISS, top_n: int
-) -> Dict[str, List[Dict[str, str]]]:
+) -> Dict[str, List[Dict[str, Any]]]:
     """
     Retrieve context from public and private FAISS retrievers.
 
     Args:
-        query (str): The user query.
-        public_retriever (FAISS): The public FAISS retriever.
-        private_retriever (FAISS): The private FAISS retriever.
+        query (str): The generalized query.
+        public_retriever (FAISS): Public FAISS retriever.
+        private_retriever (FAISS): Private FAISS retriever.
         top_n (int): Number of top results to retrieve.
 
     Returns:
-        Dict[str, List[Dict[str, str]]]: Retrieved contexts with metadata from both retrievers.
+        Dict[str, List[Dict[str, Any]]]: Retrieved contexts with metadata from both retrievers.
     """
     logger.info(f"Retrieving context for query: {query}")
 
@@ -63,30 +65,43 @@ def retrieve_context(
     }
 
 
-def dict_to_human_readable(d):
-    return ", ".join(f"{key}: {value}" for key, value in d.items())
-
-
 if __name__ == "__main__":
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-    # Load the indexes
+    # Load FAISS indexes
     public_retriever = load_faiss_index(PUBLIC_FAISS_DIR, embeddings)
     private_retriever = load_faiss_index(PRIVATE_FAISS_DIR, embeddings)
 
     # Example usage
     patient_info = {
-        "age": 23,
+        "age": 30,
         "gender": "Female",
-        "ethnicity": "Caucasian",
-        "weight_kg": 120,
-        "height_cm": 160,
-        "hba1c_percent": 4.5,
-        "cholesterol_mg_dl": 160.8,
-        "triglycerides_mg_dl": 57.4,
+        "ethnicity": "Asian",
+        "pregnancy_status": "None",
+        "weight_kg": 66.9,
+        "height_cm": 175.7,
+        "bmi": 21.7,
+        "hba1c_percent": 4.9,
+        "fasting_glucose_mg_dl": 86.6,
+        "postprandial_glucose_mg_dl": 111.5,
+        "cholesterol_mg_dl": 128.1,
+        "hdl_mg_dl": 47.3,
+        "ldl_mg_dl": 126.0,
+        "triglycerides_mg_dl": 147.2,
+        "blood_pressure_systolic_mm_hg": 91.2,
+        "blood_pressure_diastolic_mm_hg": 67.2,
+        "kidney_function_gfr": 110.5,
+        "symptoms": "Frequent urination, Blurred vision, Thirst",
+        "symptom_severity": "Moderate",
+        "co_morbidities": "Obesity, Peripheral neuropathy",
     }
-    query = f"{dict_to_human_readable(patient_info)}. What is the recommended treatment for Type 2 diabetes?"
-    results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
+    base_query = "What is the recommended treatment?"
+    generalized_query = generalize_query(patient_info, base_query)
+
+    results = retrieve_context(
+        generalized_query, public_retriever, private_retriever, RETRIEVAL_TOP_N
+    )
+
     print("Public Results:")
     for result in results["public_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
@@ -95,14 +110,7 @@ if __name__ == "__main__":
     for result in results["private_results"]:
         print(f"- {result['text']} (Source: {result['metadata']})")
 
-    output_path = Path("full_answer.txt")
-    with output_path.open("w", encoding="utf-8") as f:
-        f.write(f"Question: {query}\n\n")
-        f.write("Public Results:\n")
-        for result in results["public_results"]:
-            f.write(f"- {result['text']} (Source: {result['metadata']})\n")
-        f.write("\nPrivate Results:\n")
-        for result in results["private_results"]:
-            f.write(f"- {result['text']} (Source: {result['metadata']})\n")
-
-    logger.info(f"Results saved to {output_path}")
+    with open("artifacts/public_docs.json", "w") as f:
+        f.write(json.dumps(results["public_results"], indent=4))
+    with open("artifacts/private_docs.json", "w") as f:
+        f.write(json.dumps(results["private_results"], indent=4))

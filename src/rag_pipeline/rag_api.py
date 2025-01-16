@@ -1,15 +1,17 @@
 from typing import List, Dict, Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from langchain_openai import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 from pydantic import BaseModel
 
-from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR
-from generator import create_rag_chain, generate_answer
+from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RAG_MODEL_NAME
+from query_generalizer import prepare_patient_data, generalize_query
 from query_logger import log_query
-from retriever import load_faiss_index
+from retriever import load_faiss_index, retrieve_context
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
+from summary_generator import generate_summary, generate_combined_summary
 
 # Initialize FastAPI application
 app = FastAPI()
@@ -23,10 +25,7 @@ embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 # Load retrievers
 public_retriever = load_faiss_index(PUBLIC_FAISS_DIR, embeddings)
 private_retriever = load_faiss_index(PRIVATE_FAISS_DIR, embeddings)
-
-# Create RAG chains
-public_chain = create_rag_chain(public_retriever)
-private_chain = create_rag_chain(private_retriever)
+llm = ChatOpenAI(model_name=RAG_MODEL_NAME, openai_api_key=OPENAI_API_KEY)
 
 
 class QueryRequest(BaseModel):
@@ -34,16 +33,8 @@ class QueryRequest(BaseModel):
     Request model for the `/query` endpoint.
     """
 
-    query: str
-
-
-class SourceDocument(BaseModel):
-    """
-    Representation of a single source document in the response.
-    """
-
-    text: str
-    metadata: Dict[str, Any]
+    patient_data: Dict[str, Any]
+    base_query: str
 
 
 class QueryResponse(BaseModel):
@@ -51,76 +42,71 @@ class QueryResponse(BaseModel):
     Response model for the `/query` endpoint.
     """
 
-    public_answer: str
-    public_sources: List[SourceDocument]
-    private_answer: str
-    private_sources: List[SourceDocument]
+    public_summary: str
+    private_summary: str
+    combined_summary: str
+    public_sources: List[Dict[str, Any]]
+    private_sources: List[Dict[str, Any]]
 
 
-@app.get("/")
-def welcome_message() -> Dict[str, str]:
-    """
-    Root endpoint to verify API status.
-
-    Returns:
-        Dict[str, str]: Welcome message.
-    """
-    return {"message": "Welcome to the Diabetes Treatment RAG API"}
-
-
-#
-# @app.post("/query", response_model=QueryResponse)
-# def query_rag_pipeline(request: QueryRequest) -> QueryResponse:
-#     """
-#     Handles user queries and returns responses from both public and private RAG pipelines.
-#
-#     Args:
-#         request (QueryRequest): The user query.
-#
-#     Returns:
-#         QueryResponse: Answers and source documents from both pipelines.
-#
-#     Raises:
-#         HTTPException: If an error occurs during query processing.
-#     """
-#     logger.info(f"Received query: {request.query}")
-#     try:
-#         # Generate answers using the RAG pipeline
-#         results = generate_answer(request.query, public_chain, private_chain)
-#         return QueryResponse(
-#             public_answer=results["public_answer"],
-#             public_sources=[
-#                 SourceDocument(text=doc.page_content, metadata=doc.metadata)
-#                 for doc in results["public_sources"]
-#             ],
-#             private_answer=results["private_answer"],
-#             private_sources=[
-#                 SourceDocument(text=doc.page_content, metadata=doc.metadata)
-#                 for doc in results["private_sources"]
-#             ],
-#         )
-#     except Exception as e:
-#         logger.error(f"Error processing query: {e}")
-#         raise HTTPException(status_code=500, detail="An error occurred while processing the query.")
-
-
-@app.post("/query")
+@app.post("/query", response_model=QueryResponse)
 def query_rag_pipeline(request: QueryRequest):
     """
     Query the RAG pipeline and return the results.
 
     Args:
-        request (QueryRequest): The query request containing the user's query.
+        request (QueryRequest): The query request containing the patient's data and query.
 
     Returns:
-        Dict: The results containing answers and sources.
+        QueryResponse: The results containing summaries and source documents.
     """
-    results = generate_answer(request.query, public_chain, private_chain)
+    try:
+        # Prepare patient data
+        patient_data_str = prepare_patient_data(request.patient_data)
+        generalized_query = generalize_query(patient_data_str, request.base_query)
+        logger.info(f"Generalized Query: {generalized_query}")
 
-    # Log the query and results
-    log_query(request.query, results)
+        # Retrieve documents
+        retrieved_context = retrieve_context(
+            generalized_query, public_retriever, private_retriever, top_n=5
+        )
 
-    return results
+        # Generate summaries
+        public_summary = generate_summary(
+            llm=llm,
+            documents=retrieved_context["public_results"],
+            source_type="public",
+            target_case=patient_data_str,
+        )
+        private_summary = generate_summary(
+            llm=llm,
+            documents=retrieved_context["private_results"],
+            source_type="private",
+            target_case=patient_data_str,
+        )
+
+        # Generate combined summary
+        combined_summary = generate_combined_summary(
+            public_summary=public_summary,
+            private_summary=private_summary,
+            target_case=patient_data_str,
+        )
+
+        # Log the query and results
+        results = {
+            "public_summary": public_summary,
+            "private_summary": private_summary,
+            "combined_summary": combined_summary,
+            "public_sources": retrieved_context["public_results"],
+            "private_sources": retrieved_context["private_results"],
+        }
+        log_query(generalized_query, results)
+
+        return results
+
+    except Exception as e:
+        logger.error(f"Error processing query: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while processing the query.")
 
 
 if __name__ == "__main__":

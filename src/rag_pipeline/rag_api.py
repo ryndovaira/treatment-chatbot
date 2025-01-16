@@ -1,11 +1,12 @@
 from typing import List, Dict, Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from langchain_openai.embeddings import OpenAIEmbeddings
 from pydantic import BaseModel
 
 from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR
 from generator import create_rag_chain, generate_answer
+from query_logger import log_query
 from retriever import load_faiss_index
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
@@ -67,39 +68,59 @@ def welcome_message() -> Dict[str, str]:
     return {"message": "Welcome to the Diabetes Treatment RAG API"}
 
 
-@app.post("/query", response_model=QueryResponse)
-def query_rag_pipeline(request: QueryRequest) -> QueryResponse:
+#
+# @app.post("/query", response_model=QueryResponse)
+# def query_rag_pipeline(request: QueryRequest) -> QueryResponse:
+#     """
+#     Handles user queries and returns responses from both public and private RAG pipelines.
+#
+#     Args:
+#         request (QueryRequest): The user query.
+#
+#     Returns:
+#         QueryResponse: Answers and source documents from both pipelines.
+#
+#     Raises:
+#         HTTPException: If an error occurs during query processing.
+#     """
+#     logger.info(f"Received query: {request.query}")
+#     try:
+#         # Generate answers using the RAG pipeline
+#         results = generate_answer(request.query, public_chain, private_chain)
+#         return QueryResponse(
+#             public_answer=results["public_answer"],
+#             public_sources=[
+#                 SourceDocument(text=doc.page_content, metadata=doc.metadata)
+#                 for doc in results["public_sources"]
+#             ],
+#             private_answer=results["private_answer"],
+#             private_sources=[
+#                 SourceDocument(text=doc.page_content, metadata=doc.metadata)
+#                 for doc in results["private_sources"]
+#             ],
+#         )
+#     except Exception as e:
+#         logger.error(f"Error processing query: {e}")
+#         raise HTTPException(status_code=500, detail="An error occurred while processing the query.")
+
+
+@app.post("/query")
+def query_rag_pipeline(request: QueryRequest):
     """
-    Handles user queries and returns responses from both public and private RAG pipelines.
+    Query the RAG pipeline and return the results.
 
     Args:
-        request (QueryRequest): The user query.
+        request (QueryRequest): The query request containing the user's query.
 
     Returns:
-        QueryResponse: Answers and source documents from both pipelines.
-
-    Raises:
-        HTTPException: If an error occurs during query processing.
+        Dict: The results containing answers and sources.
     """
-    logger.info(f"Received query: {request.query}")
-    try:
-        # Generate answers using the RAG pipeline
-        results = generate_answer(request.query, public_chain, private_chain)
-        return QueryResponse(
-            public_answer=results["public_answer"],
-            public_sources=[
-                SourceDocument(text=doc.page_content, metadata=doc.metadata)
-                for doc in results["public_sources"]
-            ],
-            private_answer=results["private_answer"],
-            private_sources=[
-                SourceDocument(text=doc.page_content, metadata=doc.metadata)
-                for doc in results["private_sources"]
-            ],
-        )
-    except Exception as e:
-        logger.error(f"Error processing query: {e}")
-        raise HTTPException(status_code=500, detail="An error occurred while processing the query.")
+    results = generate_answer(request.query, public_chain, private_chain)
+
+    # Log the query and results
+    log_query(request.query, results)
+
+    return results
 
 
 if __name__ == "__main__":

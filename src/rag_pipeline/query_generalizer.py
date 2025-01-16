@@ -1,5 +1,9 @@
 from typing import Dict, List
 
+from src.logging_config import setup_logger
+
+logger = setup_logger(__name__)
+
 
 def prioritize_features(patient_data: Dict[str, any]) -> List[str]:
     """
@@ -11,7 +15,6 @@ def prioritize_features(patient_data: Dict[str, any]) -> List[str]:
     Returns:
         List[str]: A list of prioritized and formatted features for generalization.
     """
-    # Critical features
     critical_features = [
         "symptoms",
         "symptom_severity",
@@ -20,8 +23,6 @@ def prioritize_features(patient_data: Dict[str, any]) -> List[str]:
         "gender",
         "ethnicity",
     ]
-
-    # Secondary features
     secondary_features = [
         "bmi",
         "blood_pressure_systolic_mm_hg",
@@ -29,8 +30,6 @@ def prioritize_features(patient_data: Dict[str, any]) -> List[str]:
         "cholesterol_mg_dl",
         "triglycerides_mg_dl",
     ]
-
-    # Contextual features
     contextual_features = [
         "pregnancy_status",
         "hba1c_percent",
@@ -41,38 +40,37 @@ def prioritize_features(patient_data: Dict[str, any]) -> List[str]:
 
     prioritized_features = []
 
-    # Extract critical features
-    for feature in critical_features:
-        if feature in patient_data and patient_data[feature]:
-            prioritized_features.append(f"{feature}: {patient_data[feature]}")
-
-    # Extract secondary features
-    for feature in secondary_features:
-        if feature in patient_data and patient_data[feature]:
-            prioritized_features.append(f"{feature}: {patient_data[feature]}")
-
-    # Extract contextual features
-    for feature in contextual_features:
-        if feature in patient_data and patient_data[feature]:
-            prioritized_features.append(f"{feature}: {patient_data[feature]}")
+    # Extract features in order of priority
+    for feature_list in [critical_features, secondary_features, contextual_features]:
+        for feature in feature_list:
+            if feature in patient_data and patient_data[feature]:
+                prioritized_features.append(f"{feature}: {patient_data[feature]}")
 
     return prioritized_features
 
 
-def generalize_query(patient_data: Dict[str, any], base_query: str) -> str:
+def prepare_patient_data(patient_data: Dict[str, any]) -> str:
+    features = prioritize_features(patient_data)
+    patient_data_str = "; ".join(features)
+    return patient_data_str
+
+
+def generalize_query(patient_data_str: str, base_query: str) -> str:
     """
     Generate a generalized query for public data retrieval.
 
     Args:
-        patient_data (Dict[str, any]): Input patient data.
-        base_query (str): Base query text (e.g., "What is the recommended treatment for Type 2 diabetes?").
+        patient_data_str (str): Input patient data.
+        base_query (str): Base query text.
 
     Returns:
         str: A generalized query with prioritized patient context.
     """
-    features = prioritize_features(patient_data)
-    generalized_features = "; ".join(features)
-    return f"{generalized_features}. {base_query}"
+
+    if not patient_data_str:
+        return base_query  # Fallback to the base query if no features are available
+
+    return f"{patient_data_str}. {base_query}"
 
 
 # Example usage
@@ -99,6 +97,13 @@ if __name__ == "__main__":
         "symptom_severity": "Moderate",
         "co_morbidities": "Obesity, Peripheral neuropathy",
     }
+    patient_data_str = prepare_patient_data(patient_info)
+    logger.info(f"Patient data string: {patient_data_str}")
+    # save to file in artifacts folder
+    with open("artifacts/patient_data.txt", "w", encoding="utf-8") as file:
+        file.write(patient_data_str)
+
     base_query = "What is the recommended treatment?"
-    generalized_query = generalize_query(patient_info, base_query)
+    generalized_query = generalize_query(patient_data_str, base_query)
+    logger.info(f"Generalized Query: {generalized_query}")
     print("Generalized Query:", generalized_query)

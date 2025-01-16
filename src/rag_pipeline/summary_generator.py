@@ -33,18 +33,21 @@ def generate_summary(
 
     if source_type == "private":
         prompt = (
-            f"Using the target case:\n\n{target_case}\n\n"
-            f"Summarize the following patient histories. Highlight similarities to the target case, "
-            f"notable patterns, commonalities, and differences. Provide insights on treatment outcomes "
-            f"and why certain approaches may or may not be applicable:\n\n"
-            f"{[doc['text'] for doc in documents]}"
+            f"Target case details:\n{target_case}\n\n"
+            f"Summarize the following patient histories. Do not repeat the target case details."
+            f"Identify similarities and differences with the target case, "
+            f"highlight treatment outcomes, and discuss why certain treatments worked or failed:\n\n"
+            f"{[doc['text'] for doc in documents]}\n\n"
+            f"Provide a structured summary with key patterns, actionable insights, and specific recommendations for the target case."
         )
     else:  # For public data
         prompt = (
-            f"Using the target case:\n\n{target_case}\n\n"
-            f"Summarize the following article samples. Extract actionable evidence, highlight relevant "
-            f"guidelines or treatments, and identify novel insights for optimizing patient care:\n\n"
-            f"{[doc['text'] for doc in documents]}"
+            f"Target case details:\n{target_case}\n\n"
+            f"Summarize the following article samples. Do not repeat the target case details."
+            f"Extract actionable recommendations, highlight population-specific guidelines "
+            f"or treatments relevant to the target case, and discuss recent research breakthroughs:\n\n"
+            f"{[doc['text'] for doc in documents]}\n\n"
+            f"Provide a concise, actionable summary with insights tailored to the target case."
         )
 
     summary = llm.invoke(prompt)
@@ -67,11 +70,17 @@ def generate_combined_summary(public_summary: str, private_summary: str, target_
     """
     logger.info("Generating actionable combined summary...")
     prompt = (
-        f"Target case:\n\n{target_case}\n\n"
+        f"Target case details:\n{target_case}\n\n"
         f"Public Summary:\n{public_summary}\n\n"
         f"Private Summary:\n{private_summary}\n\n"
-        f"Based on these insights, suggest an optimal treatment approach for the target case. "
-        f"Discuss rationale, actionable steps, and key considerations."
+        f"Integrate these insights to provide a unified treatment plan for the target case. "
+        f"Do not repeat the target case details."
+        f"Highlight actionable steps, considerations, and evidence supporting the recommendations. "
+        f"Structure the output as follows:\n"
+        f"1. Key Findings from Public Data\n"
+        f"2. Key Findings from Private Data\n"
+        f"3. Integrated Recommendations\n"
+        f"4. Additional Considerations or Unresolved Questions."
     )
     llm = ChatOpenAI(model_name=RAG_MODEL_NAME, openai_api_key=OPENAI_API_KEY)
     combined_summary = llm.invoke(prompt)

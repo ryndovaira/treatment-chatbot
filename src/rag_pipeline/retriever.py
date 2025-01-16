@@ -64,7 +64,7 @@ def retrieve_context(
 
 
 def dict_to_human_readable(d):
-    return "\n".join(f"{key}: {value}" for key, value in d.items())
+    return ", ".join(f"{key}: {value}" for key, value in d.items())
 
 
 if __name__ == "__main__":
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         "cholesterol_mg_dl": 160.8,
         "triglycerides_mg_dl": 57.4,
     }
-    query = f"{dict_to_human_readable(patient_info)}\nWhat is the recommended treatment for Type 2 diabetes?"
+    query = f"{dict_to_human_readable(patient_info)}. What is the recommended treatment for Type 2 diabetes?"
     results = retrieve_context(query, public_retriever, private_retriever, RETRIEVAL_TOP_N)
     print("Public Results:")
     for result in results["public_results"]:

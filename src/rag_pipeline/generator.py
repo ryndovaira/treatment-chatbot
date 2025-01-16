@@ -50,8 +50,8 @@ def generate_answer(
     """
     logger.info(f"Generating answers for query: {query}")
 
-    public_response = public_chain({"query": query})
-    private_response = private_chain({"query": query})
+    public_response = public_chain.invoke({"query": query})
+    private_response = private_chain.invoke({"query": query})
 
     return {
         "public_answer": public_response.get("result", ""),

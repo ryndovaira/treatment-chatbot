@@ -3,12 +3,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from src.data.generate_synthetic_data.config import (
-    OUTPUT_FILE_BASIC_PATIENT_DATA,
-    RANDOM_SEED,
-)
-from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
-    NUM_PATIENTS,
+from patient_data_params import (
     GENDERS,
     ETHNICITIES,
     PREGNANCY_STATUS,
@@ -17,6 +12,17 @@ from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
     CO_MORBIDITIES,
     LAB_RANGES,
     LOG_FILE_NAME,
+    WEIGHT_KG_RANGE,
+    HEIGHT_CM_RANGE,
+    compute_bmi,
+    AGE_RANGE,
+)
+from src.data.generate_synthetic_data.config import (
+    OUTPUT_FILE_BASIC_PATIENT_DATA,
+    RANDOM_SEED,
+)
+from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
+    NUM_PATIENTS,
 )
 from src.logging_config import setup_logger
 
@@ -27,16 +33,16 @@ random.seed(RANDOM_SEED)
 
 def generate_demographics(patient_id):
     logger.info(f"Generating demographics data for patient {patient_id}")
-    age = random.randint(0, 100)
+    age = random.randint(*AGE_RANGE)
     gender = random.choice(GENDERS)
     ethnicity = random.choice(ETHNICITIES)
     pregnancy_status = None
     if gender == "Female" and 18 <= age <= 45:
         pregnancy_status = random.choice(PREGNANCY_STATUS)
 
-    weight_kg = round(random.uniform(30, 180), 1)
-    height_cm = round(random.uniform(140, 200), 1)
-    bmi = round(weight_kg / ((height_cm / 100) ** 2), 1)
+    weight_kg = round(random.uniform(*WEIGHT_KG_RANGE), 1)
+    height_cm = round(random.uniform(*HEIGHT_CM_RANGE), 1)
+    bmi = compute_bmi(weight_kg, height_cm)
 
     # Validate BMI
     if not (10 <= bmi <= 60):

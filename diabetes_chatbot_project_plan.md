@@ -194,7 +194,7 @@ The chatbot will include explainability features to enhance trust and usability:
 - **Summary of Recommendations**: Clear and concise output for users.
 - **Relevant Guidelines**: Highlight retrieved portions of medical guidelines as evidence.
 - **Top N Similar Patients**: Examples of similar cases and their treatments.
-- **Top N Articles**: Latest research articles for special cases, with links to the source.
+- **Top M Articles**: Latest research articles for special cases, with links to the source.
 - **Confidence Scores**: Display a confidence level for each recommendation (e.g., "85% confident").
 
 ---

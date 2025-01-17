@@ -118,11 +118,4 @@
 4. **Actionability**:
     - Recommendations must be practical and evidence-based.
 
----
-
-## Next Steps
-
-1. Validate input data structure.
-2. Finalize query generalization strategy.
-3. Develop modules for retrieval, summarization, and recommendations.
-4. Test end-to-end pipeline with diverse patient data.
+--

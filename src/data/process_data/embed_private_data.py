@@ -4,8 +4,7 @@ from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from paths_and_constants import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
-from src.env_config import PRIVATE_EMBEDDING_MODEL
+from paths_and_constants import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR, PRIVATE_EMBEDDING_MODEL
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -55,7 +54,7 @@ def load_private_data():
 
 def generate_embeddings(documents):
     model = SentenceTransformer(PRIVATE_EMBEDDING_MODEL)
-    logger.info(f"Generating embeddings using model: {PRIVATE_EMBEDDING_MODEL}")
+    logger.info(f"Generating embeddings using model: {PRIVATE_EMBEDDING_MODEL} ({model})")
     vectorstore = FAISS.from_texts(
         [doc["text"] for doc in tqdm(documents, desc="Embedding texts")],
         embedding=lambda texts: model.encode(texts, batch_size=32, show_progress_bar=True),

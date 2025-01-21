@@ -1,0 +1,49 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Deploy only on merge to main
+
+jobs:
+  deploy:
+    needs: [ test-backend, test-frontend ]  # Ensure tests pass before deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker
+
+      - name: Build and Push Backend Image
+        run: |
+          docker build -f docker/Dockerfile.backend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest
+
+      - name: Build and Push Frontend Image
+        run: |
+          docker build -f docker/Dockerfile.frontend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy diabetes-backend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy diabetes-frontend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated

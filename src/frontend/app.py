@@ -8,10 +8,7 @@ from src.patient_data_params import *
 
 logger = setup_logger(__name__)
 
-# Set API endpoint
-BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000")
-
-API_URL = f"{BACKEND_API_URL}/query"
+API_URL = f"{os.getenv("BACKEND_API_URL", "http://localhost:8000")}/query"
 
 st.title("Diabetes Treatment Support Chatbot")
 

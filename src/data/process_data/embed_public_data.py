@@ -12,7 +12,7 @@ from paths_and_constants import (
     PUBLIC_EMBEDDING_MODEL_TOKEN_LIMIT_PER_MINUTE,
     PUBLIC_FAISS_DIR,
 )
-from src.config import OPENAI_API_KEY
+from src.env_config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

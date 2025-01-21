@@ -7,7 +7,7 @@ from langchain_community.vectorstores import FAISS
 
 from paths_and_constants import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RETRIEVAL_TOP_N
 from query_generalizer import generalize_query
-from src.config import OPENAI_API_KEY
+from src.env_config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from paths_and_constants import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
-from src.config import PRIVATE_EMBEDDING_MODEL
+from src.env_config import PRIVATE_EMBEDDING_MODEL
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

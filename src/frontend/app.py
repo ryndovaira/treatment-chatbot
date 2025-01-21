@@ -1,14 +1,13 @@
-import os
-
 import requests
 import streamlit as st
 
+from src.env_config import BACKEND_API_URL
 from src.logging_config import setup_logger
 from src.patient_data_params import *
 
 logger = setup_logger(__name__)
 
-API_URL = f"{os.getenv("BACKEND_API_URL", "http://localhost:8000")}/query"
+API_URL = f"{BACKEND_API_URL}/query"
 
 st.title("Diabetes Treatment Support Chatbot")
 

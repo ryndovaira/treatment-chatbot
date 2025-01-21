@@ -1,6 +1,5 @@
 from tqdm import tqdm
 
-from src.config import OPENAI_MODEL, OPENAI_TEMPERATURE, OPENAI_MAX_TOKENS
 from src.data.generate_synthetic_data.config import (
     OUTPUT_FILE_TREATMENT_PATIENT_DATA,
 )
@@ -12,6 +11,7 @@ from src.data.generate_synthetic_data.step_2_treatment_patient_data.helpers impo
 from src.data.generate_synthetic_data.step_2_treatment_patient_data.patient_data_models import (
     PatientData,
 )
+from src.env_config import OPENAI_MODEL, OPENAI_TEMPERATURE, OPENAI_MAX_TOKENS
 from src.logging_config import setup_logger
 from src.openai_utils.openai_api_handler import get_openai_client
 

@@ -4,7 +4,7 @@ from typing import Dict, List, Any
 from langchain_openai.chat_models import ChatOpenAI
 
 from paths_and_constants import RAG_MODEL_NAME
-from src.config import OPENAI_API_KEY
+from src.env_config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
 logger = setup_logger(__name__)

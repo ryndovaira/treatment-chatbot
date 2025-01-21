@@ -6,8 +6,8 @@ OPENAI_MAX_TOKENS = 600
 
 USE_REAL_OPENAI_API = False
 
-LOG_DIR = "logs"
-
+LOG_DIR = Path(__file__).resolve().parent / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 

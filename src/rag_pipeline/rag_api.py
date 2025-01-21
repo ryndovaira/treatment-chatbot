@@ -9,7 +9,7 @@ from paths_and_constants import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RAG_MODEL_N
 from query_generalizer import prepare_patient_data, generalize_query
 from query_logger import log_query
 from retriever import load_faiss_index, retrieve_context
-from src.config import OPENAI_API_KEY
+from src.env_config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 from summary_generator import generate_summary, generate_combined_summary
 

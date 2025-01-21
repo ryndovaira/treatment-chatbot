@@ -2,7 +2,7 @@ from datetime import datetime
 
 from openai import OpenAI
 
-from src.config import (
+from src.env_config import (
     OPENAI_API_KEY,
     OPENAI_PROJECT_ID,
     OPENAI_MODEL,

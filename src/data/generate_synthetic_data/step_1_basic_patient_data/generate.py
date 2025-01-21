@@ -3,7 +3,15 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from patient_data_params import (
+from src.data.generate_synthetic_data.config import (
+    OUTPUT_FILE_BASIC_PATIENT_DATA,
+    RANDOM_SEED,
+)
+from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
+    NUM_PATIENTS,
+)
+from src.logging_config import setup_logger
+from src.patient_data_params import (
     GENDERS,
     ETHNICITIES,
     PREGNANCY_STATUS,
@@ -17,14 +25,6 @@ from patient_data_params import (
     compute_bmi,
     AGE_RANGE,
 )
-from src.data.generate_synthetic_data.config import (
-    OUTPUT_FILE_BASIC_PATIENT_DATA,
-    RANDOM_SEED,
-)
-from src.data.generate_synthetic_data.step_1_basic_patient_data.config import (
-    NUM_PATIENTS,
-)
-from src.logging_config import setup_logger
 
 logger = setup_logger(__name__, file_name=LOG_FILE_NAME)
 

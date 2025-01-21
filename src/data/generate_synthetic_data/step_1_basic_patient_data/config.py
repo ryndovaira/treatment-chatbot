@@ -1,5 +1,5 @@
-from patient_data_params import LAB_RANGES
 from src.config import LOG_DIR
+from src.patient_data_params import LAB_RANGES
 
 NUM_PATIENTS = 100  # Number of synthetic patients to generate
 

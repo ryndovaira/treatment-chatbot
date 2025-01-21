@@ -1,0 +1,26 @@
+curl -X POST "http://localhost:8000/query" -H "Content-Type: application/json" \
+-d '{
+    "patient_data": {
+        "age": 30,
+        "gender": "Female",
+        "ethnicity": "Asian",
+        "pregnancy_status": "None",
+        "weight_kg": 66.9,
+        "height_cm": 175.7,
+        "bmi": 21.7,
+        "hba1c_percent": 4.9,
+        "fasting_glucose_mg_dl": 86.6,
+        "postprandial_glucose_mg_dl": 111.5,
+        "cholesterol_mg_dl": 128.1,
+        "hdl_mg_dl": 47.3,
+        "ldl_mg_dl": 126.0,
+        "triglycerides_mg_dl": 147.2,
+        "blood_pressure_systolic_mm_hg": 91.2,
+        "blood_pressure_diastolic_mm_hg": 67.2,
+        "kidney_function_gfr": 110.5,
+        "symptoms": "Frequent urination, Blurred vision, Thirst",
+        "symptom_severity": "Moderate",
+        "co_morbidities": "Obesity, Peripheral neuropathy"
+    },
+    "base_query": "What is the recommended treatment?"
+}'

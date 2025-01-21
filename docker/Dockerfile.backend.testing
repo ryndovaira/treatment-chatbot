@@ -1,0 +1,24 @@
+# Use an official Python image as base
+FROM python:3.12-slim
+
+# Set environment variables to prevent Python from buffering stdout/stderr
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+# Set the working directory
+WORKDIR /app
+
+# Copy requirement files and install dependencies for testing
+COPY requirements/common.txt requirements/backend.txt requirements/testing_backend.txt ./requirements/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements/backend.txt && \
+    pip install --no-cache-dir -r requirements/testing_backend.txt
+
+# Copy the application code
+COPY src/rag_pipeline/ /app/
+
+# Expose the FastAPI port
+EXPOSE 8000
+
+# Default command to run tests
+CMD ["pytest", "--tb=short", "--disable-warnings", "/app/tests"]

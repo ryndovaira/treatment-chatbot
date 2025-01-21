@@ -1,0 +1,24 @@
+# Use PyTorch runtime image with CUDA 12.4 and cuDNN 9
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS base
+
+WORKDIR /app
+
+# Copy requirements files
+COPY requirements/common.txt requirements/backend.txt ./requirements/
+
+# Install dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements/common.txt && \
+    pip install --no-cache-dir -r requirements/backend.txt
+
+# Copy application code
+COPY . .
+
+# Set environment variables and Python path
+ENV PYTHONPATH="/app:/app/src:/app/src/rag_pipeline"
+
+# Expose the application port
+EXPOSE 8000
+
+# Start the FastAPI server
+CMD ["uvicorn", "src.rag_pipeline.rag_api:app", "--host", "0.0.0.0", "--port", "8000"]

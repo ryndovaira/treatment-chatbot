@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 from pydantic import BaseModel
 
-from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RAG_MODEL_NAME
+from paths_and_constants import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RAG_MODEL_NAME
 from query_generalizer import prepare_patient_data, generalize_query
 from query_logger import log_query
 from retriever import load_faiss_index, retrieve_context

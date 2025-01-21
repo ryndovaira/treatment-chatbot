@@ -5,7 +5,7 @@ from langchain_community.vectorstores import FAISS
 from tiktoken import encoding_for_model
 from tqdm import tqdm
 
-from config import (
+from paths_and_constants import (
     PUBLIC_EMBEDDING_MODEL,
     PROCESSED_PUBLIC_DATA_PICKLE,
     DEBUG,

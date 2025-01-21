@@ -3,7 +3,7 @@ from typing import Dict, List, Any
 
 from langchain_openai.chat_models import ChatOpenAI
 
-from config import RAG_MODEL_NAME
+from paths_and_constants import RAG_MODEL_NAME
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 

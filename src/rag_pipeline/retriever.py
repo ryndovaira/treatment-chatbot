@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
-from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RETRIEVAL_TOP_N
+from paths_and_constants import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR, RETRIEVAL_TOP_N
 from query_generalizer import generalize_query
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger

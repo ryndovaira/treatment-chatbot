@@ -6,7 +6,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from tqdm import tqdm
 
-from config import (
+from paths_and_constants import (
     RAW_PUBLIC_DATA_DIR,
     PROCESSED_PUBLIC_DATA_FILE,
     PROCESSED_PUBLIC_DATA_PICKLE,

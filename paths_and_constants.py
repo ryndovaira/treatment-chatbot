@@ -1,6 +1,13 @@
 from pathlib import Path
 
-from src.config import OPENAI_MODEL
+OPENAI_MODEL = "gpt-4o-mini"
+OPENAI_TEMPERATURE = 0.5
+OPENAI_MAX_TOKENS = 600
+
+USE_REAL_OPENAI_API = False
+
+LOG_DIR = "logs"
+
 
 BASE_DIR = Path(__file__).resolve().parent
 

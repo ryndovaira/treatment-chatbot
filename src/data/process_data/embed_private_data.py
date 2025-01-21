@@ -4,7 +4,7 @@ from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from config import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
+from paths_and_constants import PRIVATE_DATA_JSON, DEBUG, PRIVATE_FAISS_DIR
 from src.config import PRIVATE_EMBEDDING_MODEL
 from src.logging_config import setup_logger
 

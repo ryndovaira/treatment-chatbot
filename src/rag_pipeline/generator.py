@@ -5,7 +5,7 @@ from langchain.chains import RetrievalQA
 from langchain.schema import Document
 from langchain_openai.chat_models import ChatOpenAI
 
-from config import RAG_MODEL_NAME
+from paths_and_constants import RAG_MODEL_NAME
 from src.config import OPENAI_API_KEY
 from src.logging_config import setup_logger
 
@@ -95,7 +95,7 @@ def generate_summary_answer(
 if __name__ == "__main__":
     from retriever import load_faiss_index, retrieve_context
     from langchain_community.embeddings import OpenAIEmbeddings
-    from config import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR
+    from paths_and_constants import PUBLIC_FAISS_DIR, PRIVATE_FAISS_DIR
 
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 

@@ -5,7 +5,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai.embeddings import OpenAIEmbeddings
 from tqdm import tqdm
 
-from config import (
+from paths_and_constants import (
     PROCESSED_PUBLIC_DATA_PICKLE,
     PUBLIC_FAISS_INDEX_PATH,
     BASE_DIR,

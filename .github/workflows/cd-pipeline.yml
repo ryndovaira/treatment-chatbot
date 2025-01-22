@@ -7,9 +7,7 @@ on:
 
 jobs:
   deploy:
-    needs: [ test-backend, test-frontend ]  # Ensure tests pass before deployment
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -36,7 +34,7 @@ jobs:
         run: |
           gcloud run deploy diabetes-backend \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest \
-            --region us-central1 \
+            --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
 
@@ -44,6 +42,6 @@ jobs:
         run: |
           gcloud run deploy diabetes-frontend \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest \
-            --region us-central1 \
+            --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated

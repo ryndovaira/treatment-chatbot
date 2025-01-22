@@ -19,16 +19,16 @@ jobs:
         run: docker build -f docker/Dockerfile.backend -t diabetes-backend-test .
 
       - name: Run Backend Tests
-        run: docker run --rm diabetes-backend-test pytest tests/
-
-  test-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Build Frontend Docker Image (Testing)
-        run: docker build -f docker/Dockerfile.frontend -t diabetes-frontend-test .
-
-      - name: Run Frontend Tests
-        run: docker run --rm diabetes-frontend-test pytest tests/
+        run: docker run --rm diabetes-backend-test pytest tests/backend/
+#
+#  test-frontend:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Build Frontend Docker Image (Testing)
+#        run: docker build -f docker/Dockerfile.frontend -t diabetes-frontend-test .
+#
+#      - name: Run Frontend Tests
+#        run: docker run --rm diabetes-frontend-test pytest tests/

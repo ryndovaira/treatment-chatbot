@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Frontend Docker Image (Testing)
-        run: docker build -f docker/Dockerfile.frontend.testing -t diabetes-frontend-test .
+        run: docker build -f docker/Dockerfile.frontend -t diabetes-frontend-test .
 
       - name: Run Frontend Tests
         run: docker run --rm diabetes-frontend-test pytest tests/

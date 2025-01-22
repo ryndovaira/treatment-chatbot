@@ -22,26 +22,26 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
-          docker build -f docker/Dockerfile.backend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest
+          docker build -f docker/Dockerfile.backend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-backend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-backend:latest
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -f docker/Dockerfile.frontend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest
+          docker build -f docker/Dockerfile.frontend -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-frontend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-frontend:latest
 
       - name: Deploy Backend to Cloud Run
         run: |
-          gcloud run deploy diabetes-backend \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-backend:latest \
+          gcloud run deploy treatment-backend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-backend:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
 
       - name: Deploy Frontend to Cloud Run
         run: |
-          gcloud run deploy diabetes-frontend \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/diabetes-frontend:latest \
+          gcloud run deploy treatment-frontend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/treatment-frontend:latest \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
